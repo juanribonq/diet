@@ -1,0 +1,1997 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="theme-color" content="#2E75B6">
+    <meta name="description" content="App de seguimiento de dieta personalizada - 5 días">
+    
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="./manifest.json">
+    
+    <!-- iOS Icons -->
+    <link rel="apple-touch-icon" href="./icon-192.svg">
+    <meta name="apple-mobile-web-app-title" content="Mi Dieta">
+    
+    <title>Mi Dieta 5 Días</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #2E75B6;
+            --primary-dark: #1a5a8f;
+            --secondary: #4472C4;
+            --success: #70AD47;
+            --warning: #ED7D31;
+            --danger: #C00000;
+            --bg: #f5f7fa;
+            --card-bg: #ffffff;
+            --text: #2c3e50;
+            --text-light: #7f8c8d;
+            --border: #e1e8ed;
+        }
+
+        /* Dark Mode */
+        [data-theme="dark"] {
+            --primary: #5a9fd4;
+            --primary-dark: #4a8bc4;
+            --secondary: #6b8fd4;
+            --bg: #1a1a2e;
+            --card-bg: #16213e;
+            --text: #eaeaea;
+            --text-light: #a0a0a0;
+            --border: #2a2a4e;
+        }
+
+        [data-theme="dark"] .header {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+        }
+
+        [data-theme="dark"] .search-container {
+            background: var(--card-bg);
+        }
+
+        [data-theme="dark"] .bottom-nav {
+            background: var(--card-bg);
+        }
+
+        [data-theme="dark"] .meal-option {
+            background: var(--card-bg);
+        }
+
+        [data-theme="dark"] .shopping-item {
+            background: var(--card-bg);
+        }
+
+        [data-theme="dark"] .recipe-card {
+            background: var(--card-bg);
+        }
+
+        [data-theme="dark"] .alert-warning {
+            background: #3d3d00;
+        }
+
+        [data-theme="dark"] .alert-danger {
+            background: #3d0000;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            padding-bottom: 80px;
+            transition: background 0.3s, color 0.3s;
+        }
+
+        /* Header - More compact */
+        .header {
+            color: white;
+            padding: 12px 20px;
+            text-align: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header-left {
+            text-align: left;
+        }
+
+        .header h1 {
+            font-size: 18px;
+            margin-bottom: 0;
+        }
+
+        .header p {
+            font-size: 11px;
+            opacity: 0.9;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .header-btn {
+            background: rgba(255,255,255,0.2);
+            border: none;
+            color: white;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            font-size: 18px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .header-btn:active {
+            background: rgba(255,255,255,0.3);
+        }
+
+        /* Search Bar - Hide on scroll */
+        .search-container {
+            padding: 10px 20px;
+            background: white;
+            border-bottom: 1px solid var(--border);
+            position: sticky;
+            top: 56px;
+            z-index: 99;
+            transition: transform 0.3s, opacity 0.3s;
+        }
+
+        .search-container.hidden {
+            transform: translateY(-100%);
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .search-bar {
+            display: flex;
+            align-items: center;
+            background: var(--bg);
+            border-radius: 25px;
+            padding: 8px 15px;
+            gap: 10px;
+        }
+
+        .search-bar input {
+            border: none;
+            background: none;
+            flex: 1;
+            font-size: 14px;
+            outline: none;
+            color: var(--text);
+        }
+
+        /* Content */
+        .content {
+            padding: 15px;
+        }
+
+        .section {
+            display: none;
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        /* Cards */
+        .card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            transition: transform 0.2s, background 0.3s;
+        }
+
+        .card:active {
+            transform: scale(0.98);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .card-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--primary);
+        }
+
+        /* Day Buttons */
+        .day-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .day-btn {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            padding: 15px 10px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: 0 3px 10px rgba(46, 117, 182, 0.3);
+            transition: all 0.3s;
+        }
+
+        .day-btn:active {
+            transform: translateY(2px);
+            box-shadow: 0 1px 5px rgba(46, 117, 182, 0.3);
+        }
+
+        .day-btn.today {
+            background: linear-gradient(135deg, var(--success) 0%, #5cb85c 100%);
+            box-shadow: 0 3px 10px rgba(112, 173, 71, 0.3);
+        }
+
+        /* Meal Sections */
+        .meal-section {
+            margin-bottom: 15px;
+        }
+
+        .meal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px;
+            background: var(--bg);
+            border-radius: 8px;
+            cursor: pointer;
+            margin-bottom: 8px;
+        }
+
+        .meal-title {
+            font-size: 14px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .meal-options {
+            display: none;
+            padding-left: 10px;
+        }
+
+        .meal-options.show {
+            display: block;
+        }
+
+        .meal-option {
+            background: white;
+            padding: 12px;
+            border-left: 4px solid var(--primary);
+            margin-bottom: 8px;
+            border-radius: 4px;
+            position: relative;
+            font-size: 14px;
+        }
+
+        .meal-option strong {
+            color: var(--primary);
+        }
+
+        .favorite-btn {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            background: none;
+            border: none;
+            font-size: 20px;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .favorite-btn:active {
+            transform: scale(1.2);
+        }
+
+        .favorite-btn.active {
+            color: #FFD700;
+        }
+
+        /* Shopping List */
+        .shopping-category {
+            margin-bottom: 20px;
+        }
+
+        .category-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--primary);
+            margin-bottom: 8px;
+            padding-bottom: 5px;
+            border-bottom: 2px solid var(--primary);
+        }
+
+        .shopping-item {
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            background: white;
+            margin-bottom: 6px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .shopping-item input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            margin-right: 10px;
+            cursor: pointer;
+        }
+
+        .shopping-item.checked label {
+            text-decoration: line-through;
+            color: var(--text-light);
+        }
+
+        /* Water Tracker */
+        .water-tracker {
+            color: white;
+            padding: 15px;
+            border-radius: 12px;
+            margin-bottom: 15px;
+            background: linear-gradient(135deg, #00c6ff 0%, #0072ff 100%);
+        }
+
+        .water-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 12px;
+            text-align: center;
+        }
+
+        .water-glasses {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+
+        .water-glass {
+            aspect-ratio: 1;
+            background: rgba(255, 255, 255, 0.3);
+            border: 2px solid white;
+            border-radius: 8px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            transition: all 0.3s;
+        }
+
+        .water-glass.filled {
+            background: rgba(255, 255, 255, 0.9);
+            color: #0072ff;
+        }
+
+        .water-buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        .water-reset, .water-remind {
+            flex: 1;
+            background: rgba(255, 255, 255, 0.2);
+            border: 1px solid white;
+            color: white;
+            padding: 8px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+
+        /* Weight Tracker */
+        .weight-tracker {
+            background: linear-gradient(135deg, var(--success) 0%, #5cb85c 100%);
+            color: white;
+            padding: 15px;
+            border-radius: 12px;
+            margin-bottom: 15px;
+        }
+
+        .weight-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 12px;
+            text-align: center;
+        }
+
+        .weight-input-row {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 12px;
+        }
+
+        .weight-input-row input {
+            flex: 1;
+            padding: 10px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            text-align: center;
+        }
+
+        .weight-input-row button {
+            padding: 10px 20px;
+            background: white;
+            color: var(--success);
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .weight-stats {
+            display: flex;
+            justify-content: space-around;
+            text-align: center;
+            margin-bottom: 12px;
+        }
+
+        .weight-stat {
+            padding: 8px;
+        }
+
+        .weight-stat-value {
+            font-size: 20px;
+            font-weight: 700;
+        }
+
+        .weight-stat-label {
+            font-size: 11px;
+            opacity: 0.9;
+        }
+
+        .weight-chart {
+            background: rgba(255,255,255,0.1);
+            border-radius: 8px;
+            padding: 10px;
+            height: 120px;
+        }
+
+        #weightCanvas {
+            width: 100%;
+            height: 100%;
+        }
+
+        /* Recipe Card */
+        .recipe-card {
+            background: white;
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+
+        .recipe-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--primary);
+            margin-bottom: 12px;
+        }
+
+        .recipe-ingredients, .recipe-steps {
+            margin-bottom: 12px;
+        }
+
+        .recipe-subtitle {
+            font-weight: 600;
+            margin-bottom: 6px;
+            color: var(--secondary);
+            font-size: 14px;
+        }
+
+        .recipe-card ul {
+            padding-left: 20px;
+            font-size: 14px;
+        }
+
+        .recipe-card li {
+            margin-bottom: 4px;
+        }
+
+        /* Info Section */
+        .info-card {
+            background: white;
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+
+        [data-theme="dark"] .info-card {
+            background: var(--card-bg);
+        }
+
+        .info-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--primary);
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .info-item {
+            padding: 10px;
+            background: var(--bg);
+            border-radius: 8px;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        .info-label {
+            font-weight: 600;
+            color: var(--text);
+        }
+
+        .alert {
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        .alert-warning {
+            background: #fff3cd;
+            border-left: 4px solid var(--warning);
+        }
+
+        .alert-danger {
+            background: #f8d7da;
+            border-left: 4px solid var(--danger);
+        }
+
+        /* Buttons */
+        .btn {
+            padding: 10px 16px;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-success {
+            background: var(--success);
+            color: white;
+        }
+
+        .btn-secondary {
+            background: var(--text-light);
+            color: white;
+        }
+
+        .btn-block {
+            width: 100%;
+            margin-bottom: 8px;
+        }
+
+        /* Bottom Navigation */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: white;
+            border-top: 1px solid var(--border);
+            display: flex;
+            padding: 8px 0;
+            z-index: 1000;
+        }
+
+        .bottom-nav-item {
+            flex: 1;
+            text-align: center;
+            padding: 4px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .bottom-nav-item.active {
+            color: var(--primary);
+        }
+
+        .bottom-nav-icon {
+            font-size: 20px;
+            margin-bottom: 2px;
+        }
+
+        .bottom-nav-label {
+            font-size: 10px;
+        }
+
+        /* Filter Buttons */
+        .filter-buttons {
+            display: flex;
+            gap: 8px;
+            overflow-x: auto;
+            padding: 8px 0;
+            margin-bottom: 12px;
+        }
+
+        .filter-btn {
+            padding: 6px 14px;
+            border: 2px solid var(--primary);
+            background: white;
+            color: var(--primary);
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: all 0.3s;
+        }
+
+        [data-theme="dark"] .filter-btn {
+            background: var(--card-bg);
+        }
+
+        .filter-btn.active {
+            background: var(--primary);
+            color: white;
+        }
+
+        /* Backup Section */
+        .backup-section {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .backup-section .btn {
+            flex: 1;
+            min-width: 120px;
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.5);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .modal.show {
+            display: flex;
+        }
+
+        .modal-content {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 20px;
+            max-width: 400px;
+            width: 100%;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .modal-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--primary);
+            margin-bottom: 15px;
+        }
+
+        .modal-close {
+            float: right;
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: var(--text-light);
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .fade-in {
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        /* Utility */
+        .hidden {
+            display: none !important;
+        }
+
+        .text-center {
+            text-align: center;
+        }
+
+        .mb-15 {
+            margin-bottom: 15px;
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--bg);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--primary);
+            border-radius: 3px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <div class="header">
+        <div class="header-left">
+            <h1>🍽️ MI DIETA 5 DÍAS</h1>
+            <p>Medellín, Colombia 🇨🇴</p>
+        </div>
+        <div class="header-actions">
+            <button class="header-btn" onclick="toggleDarkMode()" title="Modo oscuro">🌙</button>
+            <button class="header-btn" onclick="showBackupModal()" title="Backup">💾</button>
+        </div>
+    </div>
+
+    <!-- Search Bar -->
+    <div class="search-container" id="searchContainer">
+        <div class="search-bar">
+            <span>🔍</span>
+            <input type="text" id="searchInput" placeholder="Buscar comidas, ingredientes...">
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="content">
+        <!-- Weight Tracker -->
+        <div class="weight-tracker" id="weightTracker">
+            <div class="weight-title">⚖️ Registro de Peso</div>
+            <div class="weight-input-row">
+                <input type="number" id="weightInput" placeholder="Peso en kg" step="0.1" min="50" max="200">
+                <button onclick="addWeight()">Guardar</button>
+            </div>
+            <div class="weight-stats">
+                <div class="weight-stat">
+                    <div class="weight-stat-value" id="currentWeight">--</div>
+                    <div class="weight-stat-label">Actual</div>
+                </div>
+                <div class="weight-stat">
+                    <div class="weight-stat-value" id="startWeight">100</div>
+                    <div class="weight-stat-label">Inicio</div>
+                </div>
+                <div class="weight-stat">
+                    <div class="weight-stat-value" id="weightLost">--</div>
+                    <div class="weight-stat-label">Perdido</div>
+                </div>
+                <div class="weight-stat">
+                    <div class="weight-stat-value">90-93</div>
+                    <div class="weight-stat-label">Meta</div>
+                </div>
+            </div>
+            <div class="weight-chart">
+                <canvas id="weightCanvas"></canvas>
+            </div>
+        </div>
+
+        <!-- Water Tracker -->
+        <div class="water-tracker" id="waterTracker">
+            <div class="water-title">💧 Hidratación Diaria - Meta: 3L</div>
+            <div class="water-glasses" id="waterGlasses">
+                <!-- Generated by JS -->
+            </div>
+            <div class="water-buttons">
+                <button class="water-reset" onclick="resetWater()">🔄 Resetear</button>
+                <button class="water-remind" onclick="setupWaterReminder()">🔔 Recordatorio</button>
+            </div>
+        </div>
+
+        <!-- HOME Section -->
+        <div id="home-section" class="section active">
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title">📅 ¿Qué Día Es Hoy?</h2>
+                </div>
+                <button class="btn btn-success btn-block" onclick="showTodayMenu()">
+                    🍽️ VER MENÚ DE HOY
+                </button>
+            </div>
+
+            <div class="day-grid">
+                <button class="day-btn" onclick="showDayMenu('lunes')">📌 LUN</button>
+                <button class="day-btn" onclick="showDayMenu('martes')">📌 MAR</button>
+                <button class="day-btn" onclick="showDayMenu('miercoles')">📌 MIÉ</button>
+                <button class="day-btn" onclick="showDayMenu('jueves')">📌 JUE</button>
+                <button class="day-btn" onclick="showDayMenu('viernes')">📌 VIE</button>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title">⭐ Mis Favoritas</h2>
+                </div>
+                <div id="favorites-preview">
+                    <p style="color: var(--text-light); text-align: center; font-size: 14px;">
+                        Marca opciones como favoritas y aparecerán aquí
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- MENU Section -->
+        <div id="menu-section" class="section">
+            <div class="filter-buttons" id="menuFilters">
+                <button class="filter-btn active" onclick="filterMenu('all', event)">Todos</button>
+                <button class="filter-btn" onclick="filterMenu('lunes', event)">Lunes</button>
+                <button class="filter-btn" onclick="filterMenu('martes', event)">Martes</button>
+                <button class="filter-btn" onclick="filterMenu('miercoles', event)">Miércoles</button>
+                <button class="filter-btn" onclick="filterMenu('jueves', event)">Jueves</button>
+                <button class="filter-btn" onclick="filterMenu('viernes', event)">Viernes</button>
+            </div>
+            <div id="menu-content">
+                <!-- Generated by JS -->
+            </div>
+        </div>
+
+        <!-- RECIPES Section -->
+        <div id="recipes-section" class="section">
+            <h2 style="margin-bottom: 15px; color: var(--primary); font-size: 16px;">🥛 Recetas con Yogurt de Búlgaros</h2>
+            <div id="bulgaros-recipes">
+                <!-- Generated by JS -->
+            </div>
+
+            <h2 style="margin: 20px 0 15px; color: var(--primary); font-size: 16px;">🫧 Recetas Agua Gasificada</h2>
+            <div id="water-recipes">
+                <!-- Generated by JS -->
+            </div>
+        </div>
+
+        <!-- SHOPPING Section -->
+        <div id="shopping-section" class="section">
+            <div class="card mb-15">
+                <button class="btn btn-primary" style="margin-right: 8px; width: 48%;" onclick="checkAllShopping()">
+                    ✓ Marcar Todo
+                </button>
+                <button class="btn btn-primary" style="width: 48%;" onclick="uncheckAllShopping()">
+                    ✗ Desmarcar
+                </button>
+            </div>
+            <div id="shopping-content">
+                <!-- Generated by JS -->
+            </div>
+        </div>
+
+        <!-- INFO Section -->
+        <div id="info-section" class="section">
+            <div class="info-card">
+                <div class="info-title">👤 Tus Datos</div>
+                <div class="info-item">
+                    <span class="info-label">Edad:</span> 31 años
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Estatura:</span> 182 cm
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Peso actual:</span> <span id="infoCurrentWeight">100</span> kg
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Meta inicial:</span> 90-93 kg
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Actividad:</span> Caminata diaria 1 hora (~5 km)
+                </div>
+            </div>
+
+            <div class="info-card">
+                <div class="info-title">⚠️ Valores Importantes</div>
+                <div class="alert alert-danger">
+                    <strong>Triglicéridos:</strong> 244.66 mg/dl (Elevados)<br>
+                    <small>Eliminar completamente el alcohol es CRÍTICO</small>
+                </div>
+                <div class="alert alert-danger">
+                    <strong>Ácido Úrico:</strong> 8.1 mg/dl (Alto)<br>
+                    <small>Evitar carnes rojas, mariscos y alcohol</small>
+                </div>
+                <div class="alert alert-warning">
+                    <strong>HDL:</strong> 32.20 mg/dl (Bajo)<br>
+                    <small>Necesita aumentar con grasas saludables</small>
+                </div>
+                <div class="alert alert-warning">
+                    <strong>A1c:</strong> 5.6% (Riesgo prediabetes)<br>
+                    <small>Controlar carbohidratos refinados</small>
+                </div>
+            </div>
+
+            <div class="info-card">
+                <div class="info-title">✅ SIEMPRE</div>
+                <ul style="padding-left: 20px; font-size: 14px;">
+                    <li>Agua al despertar</li>
+                    <li>Yogurt de búlgaros: 1-2 tazas diarias</li>
+                    <li>Agua gasificada alterna con natural</li>
+                    <li>Proteína en CADA comida</li>
+                    <li>Ensalada abundante en almuerzo</li>
+                    <li>Caminata de 1 hora diaria</li>
+                    <li>3 litros de agua total</li>
+                </ul>
+            </div>
+
+            <div class="info-card">
+                <div class="info-title">❌ NUNCA</div>
+                <ul style="padding-left: 20px; color: var(--danger); font-size: 14px;">
+                    <li><strong>Alcohol (ni una cerveza)</strong></li>
+                    <li>Azúcar refinada</li>
+                    <li>Frituras</li>
+                    <li>Pan blanco, arroz blanco</li>
+                    <li>Gaseosas comerciales</li>
+                    <li>Comida rápida</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bottom Navigation -->
+    <div class="bottom-nav">
+        <div class="bottom-nav-item active" data-section="home" onclick="showSection('home', event)">
+            <div class="bottom-nav-icon">🏠</div>
+            <div class="bottom-nav-label">Inicio</div>
+        </div>
+        <div class="bottom-nav-item" data-section="menu" onclick="showSection('menu', event)">
+            <div class="bottom-nav-icon">📋</div>
+            <div class="bottom-nav-label">Menú</div>
+        </div>
+        <div class="bottom-nav-item" data-section="recipes" onclick="showSection('recipes', event)">
+            <div class="bottom-nav-icon">👨‍🍳</div>
+            <div class="bottom-nav-label">Recetas</div>
+        </div>
+        <div class="bottom-nav-item" data-section="shopping" onclick="showSection('shopping', event)">
+            <div class="bottom-nav-icon">🛒</div>
+            <div class="bottom-nav-label">Compras</div>
+        </div>
+        <div class="bottom-nav-item" data-section="info" onclick="showSection('info', event)">
+            <div class="bottom-nav-icon">ℹ️</div>
+            <div class="bottom-nav-label">Info</div>
+        </div>
+    </div>
+
+    <!-- Backup Modal -->
+    <div class="modal" id="backupModal">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeBackupModal()">&times;</button>
+            <div class="modal-title">💾 Backup de Datos</div>
+            <p style="margin-bottom: 15px; font-size: 14px; color: var(--text-light);">
+                Exporta tus datos para no perderlos o importa un backup anterior.
+            </p>
+            <div class="backup-section">
+                <button class="btn btn-primary" onclick="exportData()">📤 Exportar</button>
+                <button class="btn btn-secondary" onclick="document.getElementById('importFile').click()">📥 Importar</button>
+                <input type="file" id="importFile" accept=".json" style="display:none" onchange="importData(event)">
+            </div>
+            <p style="margin-top: 15px; font-size: 12px; color: var(--text-light);">
+                El archivo incluye: peso, favoritos, agua, compras y configuración.
+            </p>
+        </div>
+    </div>
+
+    <script>
+        // DATA
+        const menuData = {
+            lunes: {
+                desayuno: [
+                    "1 taza yogurt búlgaros + 1 scoop proteína ISO100 + 1/2 taza arándanos + 1 cucharada chía",
+                    "1 arepa maíz pequeña + 2 huevos revueltos con tomate y cebolla + 1/4 aguacate",
+                    "Avena (1/2 taza) + yogurt búlgaros + proteína + canela + fresas"
+                ],
+                snack_manana: [
+                    "1 manzana verde + 10 almendras",
+                    "1 taza yogurt búlgaros natural + 5 fresas",
+                    "1 pera + 1 cucharada mantequilla de maní Wake Up"
+                ],
+                almuerzo: [
+                    "Pechuga a la plancha (150g) + ensalada grande + 1/2 taza lentejas + aceite de oliva",
+                    "Filete de tilapia al horno + brócoli y coliflor al vapor + 1/2 taza garbanzos",
+                    "Trucha al ajillo + ensalada mixta + 1 papa criolla mediana"
+                ],
+                snack_tarde: [
+                    "Batido: 1 scoop proteína ISO100 + agua gasificada + hielo + espinaca",
+                    "2 rodajas queso campesino + tomate cherry",
+                    "Palitos de apio con 1 cucharada mantequilla de maní Wake Up"
+                ],
+                cena: [
+                    "Sopa de vegetales (ahuyama, habichuela, zanahoria, apio) + pechuga desmenuzada",
+                    "Ensalada grande con atún en agua + aceite de oliva + aguacate",
+                    "Crema de ahuyama (con leche deslactosada) + filete de pechuga"
+                ]
+            },
+            martes: {
+                desayuno: [
+                    "Revuelto de 2 claras + 1 huevo entero con champiñones y espinaca + 1 arepa pequeña",
+                    "Batido verde (espinaca, 1 scoop proteína, yogurt búlgaros, 1/2 banano, hielo)",
+                    "Pancakes proteicos (1 huevo + 1/2 taza avena + proteína) con 1 cucharadita miel"
+                ],
+                snack_manana: [
+                    "1 pera + 1 puñado pequeño maní natural",
+                    "Zanahoria baby con 2 cucharadas hummus",
+                    "Yogurt búlgaros + 1/2 taza papaya picada"
+                ],
+                almuerzo: [
+                    "Trucha al ajillo (150g) + brócoli y coliflor al vapor + 1 papa criolla mediana",
+                    "Pechuga a la plancha + ensalada mixta + 1/2 taza arroz integral",
+                    "Salmón al horno + vegetales asados (pimentón, calabacín) + 1/2 taza quinua"
+                ],
+                snack_tarde: [
+                    "Yogurt búlgaros + 5 nueces + canela",
+                    "1 scoop proteína con agua gasificada + 1 mandarina",
+                    "1 manzana verde cortada con 1 cucharada mantequilla de maní Wake Up"
+                ],
+                cena: [
+                    "Crema de ahuyama + filete de pechuga",
+                    "Tortilla de 2 huevos con vegetales + ensalada",
+                    "Consomé de pollo con vegetales + presa de pollo sin piel"
+                ]
+            },
+            miercoles: {
+                desayuno: [
+                    "Avena (1/2 taza) cocida + yogurt búlgaros + 1 scoop proteína + canela + arándanos",
+                    "Wrap de 1 tortilla integral + revuelto de huevo + aguacate + tomate",
+                    "Smoothie bowl (yogurt búlgaros, proteína, frutos rojos, avena, semillas chía)"
+                ],
+                snack_manana: [
+                    "Batido: 1 scoop proteína + fresas congeladas + agua gasificada",
+                    "1 manzana verde + 15g queso bajo en grasa",
+                    "1 taza yogurt búlgaros + 1/2 taza melón"
+                ],
+                almuerzo: [
+                    "Salmón al horno (150g) + ensalada de espinaca con limón + 1/2 taza quinua",
+                    "Pollo desmenuzado + ensalada grande + 1/2 taza frijoles",
+                    "Tilapia al horno + ensalada de remolacha y zanahoria + 1/2 taza lentejas"
+                ],
+                snack_tarde: [
+                    "Palitos de apio y pepino con 2 cucharadas mantequilla de maní Wake Up",
+                    "Gelatina sin azúcar + 10 almendras",
+                    "Edamames cocidos con sal marina"
+                ],
+                cena: [
+                    "Consomé de pollo con vegetales (sin papa, con ahuyama) + presa de pollo sin piel",
+                    "Ensalada César saludable (lechuga, pollo, parmesano light, sin crutones)",
+                    "Sopa de vegetales con fideos de calabacín + pechuga desmenuzada"
+                ]
+            },
+            jueves: {
+                desayuno: [
+                    "2 arepas de avena (hojuelas licuadas) + queso campesino + café negro",
+                    "Huevos pochados (2) sobre espinaca salteada + 1 arepa pequeña + aguacate",
+                    "Yogurt búlgaros + proteína + granola casera (avena, nueces, canela) sin azúcar"
+                ],
+                snack_manana: [
+                    "1 taza fresas + yogurt búlgaros",
+                    "Batido verde (espinaca, pepino, limón, agua gasificada, stevia)",
+                    "1 banano pequeño con 1 cucharada mantequilla de maní Wake Up"
+                ],
+                almuerzo: [
+                    "Pechuga a la plancha con chimichurri + ensalada de remolacha y zanahoria + 1/2 taza lentejas",
+                    "Filete de pescado + vegetales asados (pimentón, berenjena, calabacín)",
+                    "Pollo al curry (con leche de coco light) + coliflor arroz (coliflor rallada salteada)"
+                ],
+                snack_tarde: [
+                    "1 scoop proteína + 1 banano pequeño con agua",
+                    "Edamames cocidos con sal marina",
+                    "Bastones de jícama con limón y sal"
+                ],
+                cena: [
+                    "Caldo de costilla desgrasado + muchos vegetales (sin papa)",
+                    "Pollo desmenuzado + ensalada de col (coleslaw con yogurt búlgaros)",
+                    "Ensalada caprese (tomate, mozzarella light, albahaca, aceite de oliva) + atún"
+                ]
+            },
+            viernes: {
+                desayuno: [
+                    "Huevos pochados (2) sobre espinaca salteada + 1 arepa pequeña + aguacate",
+                    "Smoothie bowl (yogurt búlgaros, proteína, frutos rojos, avena, semillas)",
+                    "Tortilla de 3 claras con champiñones y espinaca + 1 arepa de avena"
+                ],
+                snack_manana: [
+                    "1 pera + 1 loncha jamón de pavo bajo en sodio",
+                    "Bastones de jícama con limón y sal",
+                    "Yogurt búlgaros + 1/2 taza piña picada"
+                ],
+                almuerzo: [
+                    "Tilapia al horno con hierbas + ensalada mixta abundante + 1/2 taza garbanzos",
+                    "Pollo al curry (con leche de coco light) + coliflor arroz",
+                    "Trucha a la plancha + ensalada grande + 1/2 taza arroz integral"
+                ],
+                snack_tarde: [
+                    "Yogurt búlgaros + semillas de chía + arándanos",
+                    "1 scoop proteína en agua gasificada + 10 nueces",
+                    "Palitos de zanahoria con 2 cucharadas hummus"
+                ],
+                cena: [
+                    "Sopa de vegetales con fideos de calabacín (zoodles) + pechuga desmenuzada",
+                    "Ensalada caprese + atún",
+                    "Crema de brócoli (con leche deslactosada) + pollo desmenuzado"
+                ]
+            }
+        };
+
+        const bulgarosRecipes = [
+            {
+                title: "1. Smoothie 'Quema Grasa'",
+                ingredients: [
+                    "1 taza yogurt búlgaros",
+                    "1 scoop proteína ISO100",
+                    "1/2 taza espinaca",
+                    "1/2 taza arándanos congelados",
+                    "1 cucharada semillas chía",
+                    "Agua gasificada o hielo",
+                    "Stevia opcional"
+                ]
+            },
+            {
+                title: "2. Bowl 'Desayuno Completo'",
+                ingredients: [
+                    "1 taza yogurt búlgaros",
+                    "1/4 taza avena cruda",
+                    "1 scoop proteína",
+                    "Fresas picadas",
+                    "5 almendras picadas",
+                    "Canela",
+                    "Semillas de chía"
+                ]
+            },
+            {
+                title: "3. Aderezo 'Tzatziki Antioqueño'",
+                ingredients: [
+                    "1 taza yogurt búlgaros",
+                    "1/2 pepino rallado (exprime el agua)",
+                    "2 dientes ajo machacados",
+                    "Cilantro picado",
+                    "Jugo de limón",
+                    "Sal y pimienta"
+                ],
+                note: "Úsalo sobre ensaladas o pollo"
+            },
+            {
+                title: "4. Smoothie 'Post-Caminata'",
+                ingredients: [
+                    "1 taza yogurt búlgaros",
+                    "1 scoop proteína",
+                    "1/2 banano",
+                    "1 cucharada mantequilla de maní Wake Up",
+                    "Canela",
+                    "Hielo"
+                ]
+            },
+            {
+                title: "5. 'Parfait Proteico'",
+                ingredients: [
+                    "Capa 1: Yogurt búlgaros + proteína",
+                    "Capa 2: Fresas picadas",
+                    "Capa 3: Yogurt búlgaros",
+                    "Capa 4: Arándanos",
+                    "Top: Almendras picadas + chía"
+                ]
+            }
+        ];
+
+        const waterRecipes = [
+            {
+                title: "1. 'Limonada Burbujeante'",
+                ingredients: ["Agua gasificada", "Jugo de 1 limón", "Stevia", "Menta fresca", "Hielo"]
+            },
+            {
+                title: "2. 'Agua Detox Tropical'",
+                ingredients: ["Agua gasificada", "Rodajas pepino", "Jengibre rallado", "Limón"]
+            },
+            {
+                title: "3. 'Agua de Fresas'",
+                ingredients: ["Agua gasificada", "3-4 fresas machacadas", "Albahaca", "Limón"]
+            },
+            {
+                title: "4. 'Mojito Sin Alcohol'",
+                ingredients: ["Agua gasificada", "Lima", "Hierbabuena machacada", "Stevia", "Hielo"]
+            },
+            {
+                title: "5. 'Agua de Arándanos'",
+                ingredients: ["Agua gasificada", "Arándanos congelados", "Limón", "Romero (opcional)"]
+            },
+            {
+                title: "6. 'Agua Mediterránea'",
+                ingredients: ["Agua gasificada", "Rodajas naranja", "Romero fresco", "Hielo"]
+            },
+            {
+                title: "7. 'Agua Verde Refrescante'",
+                ingredients: ["Agua gasificada", "Pepino", "Menta", "Lima"]
+            },
+            {
+                title: "8. 'Agua Picante'",
+                ingredients: ["Agua gasificada", "Jengibre", "Limón", "Pizca cayena (opcional)"]
+            }
+        ];
+
+        const shoppingData = {
+            "🥩 PROTEÍNAS": [
+                "Pechuga de pollo sin piel (600-800g)",
+                "Huevos (18 unidades)",
+                "Tilapia fresca (300-400g)",
+                "Trucha fresca (300-400g)",
+                "Salmón (200-300g)",
+                "Atún en agua (2-3 latas)",
+                "Queso campesino (200g)",
+                "Proteína ISO100 Dymatize",
+                "Leche deslactosada para búlgaros (2-3 litros)"
+            ],
+            "🍎 FRUTAS": [
+                "Manzanas verdes (7)",
+                "Peras (5)",
+                "Fresas (500g)",
+                "Arándanos (250g)",
+                "Limones (10-12)",
+                "Bananos pequeños (3-4)",
+                "Mandarinas (5)"
+            ],
+            "🥬 VEGETALES": [
+                "Espinaca (2 manojos)",
+                "Lechuga (2)",
+                "Brócoli (500g)",
+                "Coliflor (1 mediana)",
+                "Tomate (1 kg)",
+                "Pepino (5-6)",
+                "Zanahoria (1 kg)",
+                "Ahuyama (1 mediana)",
+                "Aguacate (3-4)",
+                "Champiñones (250g)"
+            ],
+            "🍚 CARBOHIDRATOS": [
+                "Lentejas secas (250g)",
+                "Garbanzos (250g)",
+                "Avena en hojuelas (500g)",
+                "Harina de maíz para arepas (500g)",
+                "Papa criolla (500g)"
+            ],
+            "🥜 GRASAS SALUDABLES": [
+                "Almendras naturales (200g)",
+                "Nueces (150g)",
+                "Semillas de chía (100g)",
+                "Mantequilla de maní Wake Up (100% maní)",
+                "Aceite de oliva extra virgen (250ml)"
+            ],
+            "🧂 CONDIMENTOS": [
+                "Cilantro (2 manojos)",
+                "Menta/hierbabuena (2 manojos)",
+                "Ajo (1 cabeza)",
+                "Jengibre fresco (1 raíz)",
+                "Canela en polvo",
+                "Sal marina",
+                "Stevia líquida"
+            ]
+        };
+
+        // INITIALIZE STATE
+        let favorites = JSON.parse(localStorage.getItem('favorites')) || [];
+        let waterGlasses = parseInt(localStorage.getItem('waterGlasses')) || 0;
+        let shoppingChecked = JSON.parse(localStorage.getItem('shoppingChecked')) || {};
+        let weightHistory = JSON.parse(localStorage.getItem('weightHistory')) || [];
+        let darkMode = localStorage.getItem('darkMode') === 'true';
+        let waterReminderInterval = null;
+
+        // INIT FUNCTIONS
+        function init() {
+            // Apply dark mode if saved
+            if (darkMode) {
+                document.documentElement.setAttribute('data-theme', 'dark');
+            }
+
+            renderMenu();
+            renderRecipes();
+            renderShopping();
+            renderWaterTracker();
+            updateFavoritesPreview();
+            renderWeightTracker();
+            setupScrollBehavior();
+            checkDailyReset();
+        }
+
+        // DARK MODE
+        function toggleDarkMode() {
+            darkMode = !darkMode;
+            localStorage.setItem('darkMode', darkMode);
+            if (darkMode) {
+                document.documentElement.setAttribute('data-theme', 'dark');
+            } else {
+                document.documentElement.removeAttribute('data-theme');
+            }
+        }
+
+        // SCROLL BEHAVIOR - Hide search on scroll down
+        function setupScrollBehavior() {
+            let lastScroll = 0;
+            const searchContainer = document.getElementById('searchContainer');
+            
+            window.addEventListener('scroll', () => {
+                const currentScroll = window.pageYOffset;
+                
+                if (currentScroll > lastScroll && currentScroll > 100) {
+                    searchContainer.classList.add('hidden');
+                } else {
+                    searchContainer.classList.remove('hidden');
+                }
+                
+                lastScroll = currentScroll;
+            });
+        }
+
+        // DAILY RESET CHECK
+        function checkDailyReset() {
+            const today = new Date().toDateString();
+            const lastDate = localStorage.getItem('lastDate');
+            
+            if (lastDate !== today) {
+                // New day - reset water
+                waterGlasses = 0;
+                localStorage.setItem('waterGlasses', waterGlasses);
+                localStorage.setItem('lastDate', today);
+                renderWaterTracker();
+            }
+        }
+
+        // WEIGHT TRACKER
+        function addWeight() {
+            const input = document.getElementById('weightInput');
+            const weight = parseFloat(input.value);
+            
+            if (!weight || weight < 50 || weight > 200) {
+                alert('Por favor ingresa un peso válido (50-200 kg)');
+                return;
+            }
+            
+            const today = new Date().toISOString().split('T')[0];
+            
+            // Check if we already have an entry for today
+            const existingIndex = weightHistory.findIndex(w => w.date === today);
+            if (existingIndex >= 0) {
+                weightHistory[existingIndex].weight = weight;
+            } else {
+                weightHistory.push({ date: today, weight: weight });
+            }
+            
+            // Keep only last 30 days
+            if (weightHistory.length > 30) {
+                weightHistory = weightHistory.slice(-30);
+            }
+            
+            localStorage.setItem('weightHistory', JSON.stringify(weightHistory));
+            input.value = '';
+            renderWeightTracker();
+        }
+
+        function renderWeightTracker() {
+            const currentWeightEl = document.getElementById('currentWeight');
+            const weightLostEl = document.getElementById('weightLost');
+            const infoWeightEl = document.getElementById('infoCurrentWeight');
+            
+            if (weightHistory.length > 0) {
+                const latest = weightHistory[weightHistory.length - 1].weight;
+                const startWeight = 100; // Initial weight
+                const lost = startWeight - latest;
+                
+                currentWeightEl.textContent = latest.toFixed(1);
+                weightLostEl.textContent = lost > 0 ? `-${lost.toFixed(1)}` : lost.toFixed(1);
+                infoWeightEl.textContent = latest.toFixed(1);
+                
+                drawWeightChart();
+            }
+        }
+
+        function drawWeightChart() {
+            const canvas = document.getElementById('weightCanvas');
+            const ctx = canvas.getContext('2d');
+            
+            // Set actual size
+            canvas.width = canvas.offsetWidth * 2;
+            canvas.height = canvas.offsetHeight * 2;
+            ctx.scale(2, 2);
+            
+            const width = canvas.offsetWidth;
+            const height = canvas.offsetHeight;
+            
+            if (weightHistory.length < 2) {
+                ctx.fillStyle = 'rgba(255,255,255,0.7)';
+                ctx.font = '12px sans-serif';
+                ctx.textAlign = 'center';
+                ctx.fillText('Agrega más registros para ver la gráfica', width/2, height/2);
+                return;
+            }
+            
+            // Get min/max for scaling
+            const weights = weightHistory.map(w => w.weight);
+            const minWeight = Math.min(...weights) - 1;
+            const maxWeight = Math.max(...weights) + 1;
+            const range = maxWeight - minWeight;
+            
+            // Draw line
+            ctx.beginPath();
+            ctx.strokeStyle = 'rgba(255,255,255,0.9)';
+            ctx.lineWidth = 2;
+            
+            const padding = 10;
+            const chartWidth = width - padding * 2;
+            const chartHeight = height - padding * 2;
+            
+            weightHistory.forEach((entry, i) => {
+                const x = padding + (i / (weightHistory.length - 1)) * chartWidth;
+                const y = padding + chartHeight - ((entry.weight - minWeight) / range) * chartHeight;
+                
+                if (i === 0) {
+                    ctx.moveTo(x, y);
+                } else {
+                    ctx.lineTo(x, y);
+                }
+            });
+            
+            ctx.stroke();
+            
+            // Draw points
+            ctx.fillStyle = 'white';
+            weightHistory.forEach((entry, i) => {
+                const x = padding + (i / (weightHistory.length - 1)) * chartWidth;
+                const y = padding + chartHeight - ((entry.weight - minWeight) / range) * chartHeight;
+                
+                ctx.beginPath();
+                ctx.arc(x, y, 3, 0, Math.PI * 2);
+                ctx.fill();
+            });
+            
+            // Draw goal line
+            const goalWeight = 91.5; // Middle of 90-93
+            if (goalWeight >= minWeight && goalWeight <= maxWeight) {
+                const goalY = padding + chartHeight - ((goalWeight - minWeight) / range) * chartHeight;
+                ctx.beginPath();
+                ctx.strokeStyle = 'rgba(255,255,255,0.3)';
+                ctx.setLineDash([5, 5]);
+                ctx.moveTo(padding, goalY);
+                ctx.lineTo(width - padding, goalY);
+                ctx.stroke();
+                ctx.setLineDash([]);
+            }
+        }
+
+        // WATER TRACKER
+        function renderWaterTracker() {
+            const container = document.getElementById('waterGlasses');
+            container.innerHTML = '';
+            for (let i = 0; i < 6; i++) {
+                const glass = document.createElement('div');
+                glass.className = 'water-glass' + (i < waterGlasses ? ' filled' : '');
+                glass.innerHTML = i < waterGlasses ? '✓' : '💧';
+                glass.onclick = () => toggleWaterGlass(i);
+                container.appendChild(glass);
+            }
+        }
+
+        function toggleWaterGlass(index) {
+            if (index < waterGlasses) {
+                waterGlasses = index;
+            } else {
+                waterGlasses = index + 1;
+            }
+            localStorage.setItem('waterGlasses', waterGlasses);
+            renderWaterTracker();
+        }
+
+        function resetWater() {
+            waterGlasses = 0;
+            localStorage.setItem('waterGlasses', waterGlasses);
+            renderWaterTracker();
+        }
+
+        // WATER REMINDER
+        function setupWaterReminder() {
+            if (!('Notification' in window)) {
+                alert('Tu navegador no soporta notificaciones');
+                return;
+            }
+            
+            if (Notification.permission === 'granted') {
+                startWaterReminder();
+            } else if (Notification.permission !== 'denied') {
+                Notification.requestPermission().then(permission => {
+                    if (permission === 'granted') {
+                        startWaterReminder();
+                    }
+                });
+            } else {
+                alert('Las notificaciones están bloqueadas. Habilítalas en la configuración del navegador.');
+            }
+        }
+
+        function startWaterReminder() {
+            if (waterReminderInterval) {
+                clearInterval(waterReminderInterval);
+                waterReminderInterval = null;
+                alert('Recordatorio de agua desactivado');
+                return;
+            }
+            
+            // Remind every 45 minutes
+            waterReminderInterval = setInterval(() => {
+                if (waterGlasses < 6) {
+                    new Notification('💧 ¡Hora de hidratarse!', {
+                        body: `Has tomado ${waterGlasses}/6 vasos. ¡Toma agua!`,
+                        icon: '💧'
+                    });
+                }
+            }, 45 * 60 * 1000); // 45 minutes
+            
+            alert('¡Recordatorio activado! Te notificaré cada 45 minutos para tomar agua.');
+            
+            // First notification
+            new Notification('💧 Recordatorio activado', {
+                body: 'Te recordaré tomar agua cada 45 minutos',
+                icon: '💧'
+            });
+        }
+
+        // MENU FUNCTIONS
+        function renderMenu() {
+            const container = document.getElementById('menu-content');
+            container.innerHTML = '';
+
+            const days = ['lunes', 'martes', 'miercoles', 'jueves', 'viernes'];
+            const mealTypes = {
+                'desayuno': '🌅 DESAYUNO',
+                'snack_manana': '🍎 SNACK MAÑANA',
+                'almuerzo': '🍽️ ALMUERZO',
+                'snack_tarde': '🥜 SNACK TARDE',
+                'cena': '🌙 CENA'
+            };
+
+            days.forEach(day => {
+                const dayCard = document.createElement('div');
+                dayCard.className = 'card fade-in';
+                dayCard.setAttribute('data-day', day);
+
+                let html = `<div class="card-header">
+                    <h2 class="card-title">${day.toUpperCase()}</h2>
+                </div>`;
+
+                Object.keys(mealTypes).forEach(mealType => {
+                    html += `<div class="meal-section">
+                        <div class="meal-header" onclick="toggleMeal('${day}-${mealType}')">
+                            <div class="meal-title">
+                                ${mealTypes[mealType]}
+                            </div>
+                            <span>▼</span>
+                        </div>
+                        <div class="meal-options" id="${day}-${mealType}">`;
+
+                    menuData[day][mealType].forEach((option, idx) => {
+                        const favId = `${day}-${mealType}-${idx}`;
+                        const isFav = favorites.includes(favId);
+                        html += `<div class="meal-option">
+                            <button class="favorite-btn ${isFav ? 'active' : ''}" onclick="toggleFavorite('${favId}')">
+                                ${isFav ? '⭐' : '☆'}
+                            </button>
+                            <strong>Opción ${idx + 1}:</strong> ${option}
+                        </div>`;
+                    });
+
+                    html += `</div></div>`;
+                });
+
+                dayCard.innerHTML = html;
+                container.appendChild(dayCard);
+            });
+        }
+
+        function toggleMeal(id) {
+            const element = document.getElementById(id);
+            element.classList.toggle('show');
+        }
+
+        function toggleFavorite(id) {
+            const index = favorites.indexOf(id);
+            if (index > -1) {
+                favorites.splice(index, 1);
+            } else {
+                favorites.push(id);
+            }
+            localStorage.setItem('favorites', JSON.stringify(favorites));
+            renderMenu();
+            updateFavoritesPreview();
+        }
+
+        function updateFavoritesPreview() {
+            const container = document.getElementById('favorites-preview');
+            if (favorites.length === 0) {
+                container.innerHTML = '<p style="color: var(--text-light); text-align: center; font-size: 14px;">Marca opciones como favoritas y aparecerán aquí</p>';
+                return;
+            }
+
+            let html = '';
+            favorites.forEach(favId => {
+                const parts = favId.split('-');
+                const day = parts[0];
+                // Handle mealType that might contain underscore
+                const optionIdx = parts[parts.length - 1];
+                const mealType = parts.slice(1, -1).join('-');
+                
+                if (menuData[day] && menuData[day][mealType]) {
+                    const option = menuData[day][mealType][parseInt(optionIdx)];
+                    if (option) {
+                        html += `<div class="meal-option" style="margin-bottom: 8px;">
+                            <strong>${day.toUpperCase()} - ${mealType.replace('_', ' ').toUpperCase()}:</strong><br>
+                            ${option}
+                        </div>`;
+                    }
+                }
+            });
+            container.innerHTML = html || '<p style="color: var(--text-light); text-align: center; font-size: 14px;">Marca opciones como favoritas y aparecerán aquí</p>';
+        }
+
+        function filterMenu(day, e) {
+            // Update button states
+            document.querySelectorAll('#menuFilters .filter-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            if (e && e.target) {
+                e.target.classList.add('active');
+            }
+
+            // Filter cards
+            document.querySelectorAll('#menu-content .card').forEach(card => {
+                if (day === 'all') {
+                    card.style.display = 'block';
+                } else {
+                    card.style.display = card.getAttribute('data-day') === day ? 'block' : 'none';
+                }
+            });
+        }
+
+        // RECIPES
+        function renderRecipes() {
+            // Búlgaros
+            const bulgarosContainer = document.getElementById('bulgaros-recipes');
+            bulgarosContainer.innerHTML = '';
+
+            bulgarosRecipes.forEach(recipe => {
+                const card = document.createElement('div');
+                card.className = 'recipe-card fade-in';
+
+                let html = `<div class="recipe-title">${recipe.title}</div>
+                    <div class="recipe-ingredients">
+                        <div class="recipe-subtitle">Ingredientes:</div>
+                        <ul>`;
+
+                recipe.ingredients.forEach(ing => {
+                    html += `<li>${ing}</li>`;
+                });
+
+                html += `</ul></div>`;
+
+                if (recipe.note) {
+                    html += `<p style="font-style: italic; color: var(--text-light); font-size: 13px;">${recipe.note}</p>`;
+                }
+
+                card.innerHTML = html;
+                bulgarosContainer.appendChild(card);
+            });
+
+            // Water
+            const waterContainer = document.getElementById('water-recipes');
+            waterContainer.innerHTML = '';
+
+            waterRecipes.forEach(recipe => {
+                const card = document.createElement('div');
+                card.className = 'recipe-card fade-in';
+
+                let html = `<div class="recipe-title">${recipe.title}</div>
+                    <div class="recipe-ingredients">
+                        <ul>`;
+
+                recipe.ingredients.forEach(ing => {
+                    html += `<li>${ing}</li>`;
+                });
+
+                html += `</ul></div>`;
+                card.innerHTML = html;
+                waterContainer.appendChild(card);
+            });
+        }
+
+        // SHOPPING
+        function renderShopping() {
+            const container = document.getElementById('shopping-content');
+            container.innerHTML = '';
+
+            Object.keys(shoppingData).forEach(category => {
+                const categoryDiv = document.createElement('div');
+                categoryDiv.className = 'shopping-category';
+
+                let html = `<div class="category-title">${category}</div>`;
+
+                shoppingData[category].forEach((item, idx) => {
+                    const itemId = `${category}-${idx}`;
+                    const isChecked = shoppingChecked[itemId] || false;
+                    html += `<div class="shopping-item ${isChecked ? 'checked' : ''}" onclick="toggleShopping('${itemId}')">
+                        <input type="checkbox" ${isChecked ? 'checked' : ''} onclick="event.stopPropagation();">
+                        <label>${item}</label>
+                    </div>`;
+                });
+
+                categoryDiv.innerHTML = html;
+                container.appendChild(categoryDiv);
+            });
+        }
+
+        function toggleShopping(id) {
+            shoppingChecked[id] = !shoppingChecked[id];
+            localStorage.setItem('shoppingChecked', JSON.stringify(shoppingChecked));
+            renderShopping();
+        }
+
+        function checkAllShopping() {
+            Object.keys(shoppingData).forEach(category => {
+                shoppingData[category].forEach((item, idx) => {
+                    shoppingChecked[`${category}-${idx}`] = true;
+                });
+            });
+            localStorage.setItem('shoppingChecked', JSON.stringify(shoppingChecked));
+            renderShopping();
+        }
+
+        function uncheckAllShopping() {
+            shoppingChecked = {};
+            localStorage.setItem('shoppingChecked', JSON.stringify(shoppingChecked));
+            renderShopping();
+        }
+
+        // NAVIGATION
+        function showSection(section, e) {
+            // Hide all sections
+            document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+
+            // Show selected section
+            document.getElementById(`${section}-section`).classList.add('active');
+
+            // Update bottom nav
+            document.querySelectorAll('.bottom-nav-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            
+            if (e && e.currentTarget) {
+                e.currentTarget.classList.add('active');
+            } else {
+                // Find and activate the correct nav item
+                document.querySelector(`.bottom-nav-item[data-section="${section}"]`)?.classList.add('active');
+            }
+
+            // Scroll to top
+            window.scrollTo(0, 0);
+        }
+
+        function showTodayMenu() {
+            const days = ['domingo', 'lunes', 'martes', 'miercoles', 'jueves', 'viernes', 'sabado'];
+            const today = days[new Date().getDay()];
+
+            if (['sabado', 'domingo'].includes(today)) {
+                alert('¡Es fin de semana! La dieta de 5 días es de Lunes a Viernes. Disfruta tu descanso pero mantén buenos hábitos 💪');
+                return;
+            }
+
+            showDayMenu(today);
+        }
+
+        function showDayMenu(day) {
+            showSection('menu');
+            filterMenu(day);
+
+            // Update filter button
+            document.querySelectorAll('#menuFilters .filter-btn').forEach(btn => {
+                btn.classList.remove('active');
+                if (btn.textContent.toLowerCase().includes(day.substring(0, 3))) {
+                    btn.classList.add('active');
+                }
+            });
+        }
+
+        // BACKUP FUNCTIONS
+        function showBackupModal() {
+            document.getElementById('backupModal').classList.add('show');
+        }
+
+        function closeBackupModal() {
+            document.getElementById('backupModal').classList.remove('show');
+        }
+
+        function exportData() {
+            const data = {
+                version: 1,
+                exportDate: new Date().toISOString(),
+                favorites: favorites,
+                waterGlasses: waterGlasses,
+                shoppingChecked: shoppingChecked,
+                weightHistory: weightHistory,
+                darkMode: darkMode
+            };
+            
+            const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `dieta-backup-${new Date().toISOString().split('T')[0]}.json`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            
+            alert('¡Backup exportado correctamente!');
+            closeBackupModal();
+        }
+
+        function importData(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+            
+            const reader = new FileReader();
+            reader.onload = function(event) {
+                try {
+                    const data = JSON.parse(event.target.result);
+                    
+                    if (data.favorites) {
+                        favorites = data.favorites;
+                        localStorage.setItem('favorites', JSON.stringify(favorites));
+                    }
+                    if (typeof data.waterGlasses === 'number') {
+                        waterGlasses = data.waterGlasses;
+                        localStorage.setItem('waterGlasses', waterGlasses);
+                    }
+                    if (data.shoppingChecked) {
+                        shoppingChecked = data.shoppingChecked;
+                        localStorage.setItem('shoppingChecked', JSON.stringify(shoppingChecked));
+                    }
+                    if (data.weightHistory) {
+                        weightHistory = data.weightHistory;
+                        localStorage.setItem('weightHistory', JSON.stringify(weightHistory));
+                    }
+                    if (typeof data.darkMode === 'boolean') {
+                        darkMode = data.darkMode;
+                        localStorage.setItem('darkMode', darkMode);
+                        if (darkMode) {
+                            document.documentElement.setAttribute('data-theme', 'dark');
+                        } else {
+                            document.documentElement.removeAttribute('data-theme');
+                        }
+                    }
+                    
+                    // Re-render everything
+                    renderMenu();
+                    renderShopping();
+                    renderWaterTracker();
+                    updateFavoritesPreview();
+                    renderWeightTracker();
+                    
+                    alert('¡Datos importados correctamente!');
+                    closeBackupModal();
+                } catch (err) {
+                    alert('Error al importar: archivo inválido');
+                }
+            };
+            reader.readAsText(file);
+            e.target.value = ''; // Reset input
+        }
+
+        // SEARCH
+        document.getElementById('searchInput').addEventListener('input', function(e) {
+            const searchTerm = e.target.value.toLowerCase();
+
+            if (searchTerm.length < 2) {
+                renderMenu();
+                return;
+            }
+
+            const container = document.getElementById('menu-content');
+            container.innerHTML = '';
+
+            const days = ['lunes', 'martes', 'miercoles', 'jueves', 'viernes'];
+            const mealTypes = {
+                'desayuno': '🌅 DESAYUNO',
+                'snack_manana': '🍎 SNACK MAÑANA',
+                'almuerzo': '🍽️ ALMUERZO',
+                'snack_tarde': '🥜 SNACK TARDE',
+                'cena': '🌙 CENA'
+            };
+
+            let hasResults = false;
+
+            days.forEach(day => {
+                Object.keys(mealTypes).forEach(mealType => {
+                    menuData[day][mealType].forEach((option, idx) => {
+                        if (option.toLowerCase().includes(searchTerm)) {
+                            hasResults = true;
+                            const card = document.createElement('div');
+                            card.className = 'card fade-in';
+                            card.innerHTML = `
+                                <div class="card-header">
+                                    <h3 class="card-title">${day.toUpperCase()} - ${mealTypes[mealType]}</h3>
+                                </div>
+                                <div class="meal-option">
+                                    <strong>Opción ${idx + 1}:</strong> ${option}
+                                </div>
+                            `;
+                            container.appendChild(card);
+                        }
+                    });
+                });
+            });
+
+            if (!hasResults) {
+                container.innerHTML = '<div class="card"><p style="text-align: center; color: var(--text-light);">No se encontraron resultados</p></div>';
+            }
+
+            // Auto switch to menu section
+            showSection('menu');
+        });
+
+        // Close modal on outside click
+        document.getElementById('backupModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeBackupModal();
+            }
+        });
+
+        // Register Service Worker for PWA
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('./sw.js')
+                    .then(registration => {
+                        console.log('SW registered:', registration.scope);
+                    })
+                    .catch(error => {
+                        console.log('SW registration failed:', error);
+                    });
+            });
+        }
+
+        // Initialize app
+        init();
+    </script>
+</body>
+</html>

@@ -37,50 +37,6 @@
             --border: #d8f3dc;
         }
 
-        /* Dark Mode */
-        [data-theme="dark"] {
-            --primary: #52B788;
-            --primary-dark: #40916c;
-            --secondary: #74c69d;
-            --bg: #1a1a2e;
-            --card-bg: #16213e;
-            --text: #eaeaea;
-            --text-light: #a0a0a0;
-            --border: #2a2a4e;
-        }
-
-        [data-theme="dark"] .header {
-            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
-        }
-
-        [data-theme="dark"] .search-container {
-            background: var(--card-bg);
-        }
-
-        [data-theme="dark"] .bottom-nav {
-            background: var(--card-bg);
-        }
-
-        [data-theme="dark"] .meal-option {
-            background: var(--card-bg);
-        }
-
-        [data-theme="dark"] .shopping-item {
-            background: var(--card-bg);
-        }
-
-        [data-theme="dark"] .recipe-card {
-            background: var(--card-bg);
-        }
-
-        [data-theme="dark"] .alert-warning {
-            background: #3d3d00;
-        }
-
-        [data-theme="dark"] .alert-danger {
-            background: #3d0000;
-        }
-
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             background: var(--bg);
@@ -938,6 +894,252 @@
             line-height: 1;
         }
 
+        /* Date Navigator */
+        .date-navigator {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+            padding: 16px 20px;
+            border-radius: 16px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 12px rgba(45, 106, 79, 0.2);
+        }
+
+        .date-navigator-text {
+            font-weight: 600;
+            font-size: 16px;
+            letter-spacing: -0.3px;
+        }
+
+        .date-navigator button {
+            background: rgba(255,255,255,0.2);
+            border: none;
+            color: white;
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            font-size: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: bold;
+        }
+
+        .date-navigator button:hover:not(:disabled) {
+            background: rgba(255,255,255,0.3);
+            transform: scale(1.05);
+        }
+
+        .date-navigator button:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+
+        /* Diario Form */
+        .diario-form {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .diario-form select,
+        .diario-form input {
+            padding: 14px;
+            border: 2px solid var(--border);
+            border-radius: 12px;
+            font-size: 14px;
+            background: var(--bg);
+            color: var(--text);
+            outline: none;
+            transition: border-color 0.3s;
+        }
+
+        .diario-form select:focus,
+        .diario-form input:focus {
+            border-color: var(--primary);
+        }
+
+        .diario-form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        /* Dynamic Food Field */
+        .food-field-item {
+            display: grid;
+            grid-template-columns: 2fr 1fr auto;
+            gap: 8px;
+            align-items: stretch;
+            position: relative;
+            transition: opacity 0.2s ease, transform 0.2s ease;
+        }
+
+        .food-field-item input {
+            padding: 14px;
+            border: 2px solid var(--border);
+            border-radius: 12px;
+            font-size: 14px;
+            background: var(--bg);
+            color: var(--text);
+            outline: none;
+            transition: border-color 0.3s;
+        }
+
+        .food-field-item input:focus {
+            border-color: var(--primary);
+        }
+
+        .food-field-item input.food-name-input {
+            grid-column: 1;
+        }
+
+        .food-field-item input.food-amount-input {
+            grid-column: 2;
+            text-align: center;
+        }
+
+        .food-field-remove {
+            background: var(--danger);
+            color: white;
+            border: none;
+            padding: 0 16px;
+            border-radius: 12px;
+            cursor: pointer;
+            font-size: 18px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            min-width: 44px;
+        }
+
+        .food-field-remove:hover {
+            transform: scale(1.05);
+            box-shadow: 0 2px 8px rgba(192, 0, 0, 0.3);
+        }
+
+        #foodFieldsContainer {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        /* Food Entry Card */
+        .food-entry {
+            background: white;
+            padding: 14px 16px;
+            border-left: 4px solid var(--primary);
+            margin-bottom: 10px;
+            border-radius: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 1px 4px rgba(45, 106, 79, 0.08);
+            transition: all 0.2s ease;
+        }
+
+        [data-theme="dark"] .food-entry {
+            background: var(--card-bg);
+        }
+
+        .food-entry:hover {
+            box-shadow: 0 2px 8px rgba(45, 106, 79, 0.15);
+        }
+
+        .food-entry-content {
+            flex: 1;
+        }
+
+        .food-entry-main {
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--text);
+            margin-bottom: 4px;
+        }
+
+        .food-entry-time {
+            color: var(--text-light);
+            font-size: 12px;
+        }
+
+        .food-entry-delete {
+            background: var(--danger);
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .food-entry-delete:hover {
+            transform: scale(1.05);
+            box-shadow: 0 2px 8px rgba(192, 0, 0, 0.3);
+        }
+
+        /* Meal Groups */
+        .meal-group {
+            margin-bottom: 24px;
+        }
+
+        .meal-group-title {
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--primary);
+            margin-bottom: 12px;
+            padding-bottom: 6px;
+            border-bottom: 2px solid var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .meal-group-empty {
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--text-light);
+            font-size: 14px;
+        }
+
+        /* Autocomplete */
+        .autocomplete-container {
+            position: relative;
+        }
+
+        .autocomplete-dropdown {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            max-height: 200px;
+            overflow-y: auto;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            z-index: 100;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            margin-top: 4px;
+        }
+
+        .autocomplete-item {
+            padding: 12px 16px;
+            cursor: pointer;
+            border-bottom: 1px solid var(--border);
+            font-size: 14px;
+            color: var(--text);
+            transition: background 0.2s;
+        }
+
+        .autocomplete-item:last-child {
+            border-bottom: none;
+        }
+
+        .autocomplete-item:hover {
+            background: var(--bg);
+        }
+
         /* Utility */
         .hidden {
             display: none !important;
@@ -976,7 +1178,7 @@
         </div>
         <div class="header-actions">
             <button class="header-btn ripple" onclick="toggleNotifications()" title="Notificaciones" id="notifBtn">🔔</button>
-            <button class="header-btn ripple" onclick="toggleDarkMode()" title="Modo oscuro">🌙</button>
+            <button class="header-btn ripple" onclick="showSection('info', event)" title="Información">ℹ️</button>
             <button class="header-btn ripple" onclick="showBackupModal()" title="Backup">💾</button>
         </div>
     </div>
@@ -1084,6 +1286,52 @@
             </div>
         </div>
 
+        <!-- DIARIO Section -->
+        <div id="diario-section" class="section">
+            <!-- Date Navigator -->
+            <div class="date-navigator">
+                <button onclick="changeDiarioDay(-1)" id="prevDayBtn">←</button>
+                <div class="date-navigator-text" id="diarioDateText">HOY - Cargando...</div>
+                <button onclick="changeDiarioDay(1)" id="nextDayBtn" disabled>→</button>
+            </div>
+
+            <!-- Add Food Form -->
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title">➕ Agregar Alimento</h2>
+                </div>
+                <div class="diario-form">
+                    <select id="mealTag" class="ripple">
+                        <option value="Desayuno">🌅 Desayuno</option>
+                        <option value="Media mañana">🍎 Media mañana</option>
+                        <option value="Almuerzo">🍽️ Almuerzo</option>
+                        <option value="Merienda">🥜 Merienda</option>
+                        <option value="Cena">🌙 Cena</option>
+                        <option value="Snack">🍿 Snack</option>
+                    </select>
+
+                    <!-- Dynamic Food Fields -->
+                    <div id="foodFieldsContainer">
+                        <!-- Generated by JS -->
+                    </div>
+
+                    <div style="display: flex; gap: 8px;">
+                        <button class="btn btn-secondary ripple" onclick="addFoodField()" style="flex: 1;">
+                            ➕ Otro alimento
+                        </button>
+                        <button class="btn btn-primary ripple" onclick="submitFoodEntry()" style="flex: 2;">
+                            💾 Guardar Todo
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Food Entries List -->
+            <div id="diario-entries">
+                <!-- Generated by JS -->
+            </div>
+        </div>
+
         <!-- INFO Section -->
         <div id="info-section" class="section">
             <div class="info-card">
@@ -1143,6 +1391,40 @@
                     <li>Comida rápida</li>
                 </ul>
             </div>
+
+            <div class="info-card">
+                <div class="info-title">📊 Exportar Datos</div>
+                <button class="btn btn-success btn-block ripple" onclick="exportDiarioCSV()">
+                    📥 Exportar Diario a CSV
+                </button>
+                <p style="margin-top: 12px; font-size: 12px; color: var(--text-light); text-align: center;">
+                    Descarga todas las entradas de tu diario en formato CSV para análisis externo
+                </p>
+            </div>
+        </div>
+
+        <!-- ALIMENTOS Section -->
+        <div id="alimentos-section" class="section">
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title">🥗 Base de Datos de Alimentos</h2>
+                    <p style="color: var(--text-light); font-size: 14px; margin-top: 8px;">
+                        Gestiona los alimentos disponibles en tu aplicación
+                    </p>
+                </div>
+                <div style="display: flex; gap: 8px; margin-bottom: 16px;">
+                    <input type="text" id="searchFoodDB" placeholder="🔍 Buscar alimento..."
+                           style="flex: 1; padding: 12px; border: 1px solid var(--border); border-radius: 8px; font-size: 14px;"
+                           onkeyup="filterFoodDatabase()">
+                    <button class="btn btn-primary ripple" onclick="showAddFoodModal()">
+                        ➕ Nuevo
+                    </button>
+                </div>
+            </div>
+
+            <div id="food-database-list">
+                <!-- Generated by JS -->
+            </div>
         </div>
     </div>
 
@@ -1156,6 +1438,10 @@
             <div class="bottom-nav-icon">📋</div>
             <div class="bottom-nav-label">Menú</div>
         </div>
+        <div class="bottom-nav-item" data-section="diario" onclick="showSection('diario', event)">
+            <div class="bottom-nav-icon">📓</div>
+            <div class="bottom-nav-label">Diario</div>
+        </div>
         <div class="bottom-nav-item" data-section="recipes" onclick="showSection('recipes', event)">
             <div class="bottom-nav-icon">👨‍🍳</div>
             <div class="bottom-nav-label">Recetas</div>
@@ -1164,9 +1450,9 @@
             <div class="bottom-nav-icon">🛒</div>
             <div class="bottom-nav-label">Compras</div>
         </div>
-        <div class="bottom-nav-item" data-section="info" onclick="showSection('info', event)">
-            <div class="bottom-nav-icon">ℹ️</div>
-            <div class="bottom-nav-label">Info</div>
+        <div class="bottom-nav-item" data-section="alimentos" onclick="showSection('alimentos', event)">
+            <div class="bottom-nav-icon">🥗</div>
+            <div class="bottom-nav-label">Alimentos</div>
         </div>
     </div>
 
@@ -1189,8 +1475,131 @@
         </div>
     </div>
 
+    <!-- Calories Modal -->
+    <div class="modal" id="caloriesModal">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeCaloriesModal()">&times;</button>
+            <div class="modal-title">🔍 Alimento No Encontrado</div>
+            <p style="margin-bottom: 15px; font-size: 14px; color: var(--text-light);">
+                No encontramos "<strong id="unknownFoodName"></strong>" en nuestra base de datos.
+            </p>
+            <div class="diario-form">
+                <label style="font-size: 13px; font-weight: 600; color: var(--text); margin-bottom: 4px;">
+                    Calorías totales para esta cantidad:
+                </label>
+                <input type="number" id="manualCalories" placeholder="Ej: 150" min="0">
+
+                <label style="font-size: 13px; font-weight: 600; color: var(--text); margin-bottom: 4px; margin-top: 8px;">
+                    Proteínas (g) - Opcional:
+                </label>
+                <input type="number" id="manualProtein" placeholder="Ej: 10" min="0" step="0.1">
+
+                <label style="font-size: 13px; font-weight: 600; color: var(--text); margin-bottom: 4px; margin-top: 8px;">
+                    Carbohidratos (g) - Opcional:
+                </label>
+                <input type="number" id="manualCarbs" placeholder="Ej: 20" min="0" step="0.1">
+
+                <label style="font-size: 13px; font-weight: 600; color: var(--text); margin-bottom: 4px; margin-top: 8px;">
+                    Grasas (g) - Opcional:
+                </label>
+                <input type="number" id="manualFat" placeholder="Ej: 5" min="0" step="0.1">
+
+                <div style="display: flex; gap: 8px; margin-top: 12px;">
+                    <button class="btn btn-secondary ripple" onclick="skipCalories()" style="flex: 1;">
+                        Omitir
+                    </button>
+                    <button class="btn btn-primary ripple" onclick="saveManualCalories()" style="flex: 2;">
+                        💾 Guardar
+                    </button>
+                </div>
+            </div>
+            <p style="margin-top: 15px; font-size: 12px; color: var(--text-light); text-align: center;">
+                💡 Tip: Busca las calorías en Google o usa apps como MyFitnessPal
+            </p>
+        </div>
+    </div>
+
+    <!-- Add/Edit Food Modal -->
+    <div class="modal" id="foodModal">
+        <div class="modal-content" style="max-height: 90vh; overflow-y: auto;">
+            <button class="modal-close" onclick="closeFoodModal()">&times;</button>
+            <div class="modal-title" id="foodModalTitle">➕ Agregar Alimento</div>
+            <p style="font-size: 12px; color: var(--text-light); margin-bottom: 16px; text-align: center;">
+                💡 Los valores nutricionales deben ser por <strong>porción por defecto</strong>
+            </p>
+            <div class="diario-form">
+                <input type="hidden" id="editFoodKey">
+
+                <label style="font-size: 13px; font-weight: 600; color: var(--text); margin-bottom: 4px;">
+                    Nombre del alimento:
+                </label>
+                <input type="text" id="foodName" placeholder="Ej: Aguacate Hass">
+
+                <label style="font-size: 13px; font-weight: 600; color: var(--text); margin-bottom: 4px; margin-top: 8px;">
+                    Porción por defecto:
+                </label>
+                <input type="text" id="foodUnit" placeholder="Ej: 1 aguacate, 1 porción, 1 taza">
+                <p style="font-size: 11px; color: var(--text-light); margin-top: 2px;">
+                    Define cómo se presenta el alimento (1 unidad, 1 taza, 1 porción, etc.)
+                </p>
+
+                <label style="font-size: 13px; font-weight: 600; color: var(--text); margin-bottom: 4px; margin-top: 8px;">
+                    Peso de esa porción (g/ml):
+                </label>
+                <input type="number" id="foodDefaultWeight" placeholder="Ej: 150" min="0" step="0.1">
+                <p style="font-size: 11px; color: var(--text-light); margin-top: 2px;">
+                    ¿Cuántos gramos/ml tiene la porción por defecto?
+                </p>
+
+                <div style="background: var(--bg); padding: 12px; border-radius: 8px; margin: 16px 0;">
+                    <p style="font-size: 12px; font-weight: 600; color: var(--primary); margin-bottom: 8px;">
+                        📊 Valores nutricionales por porción
+                    </p>
+
+                    <label style="font-size: 13px; font-weight: 600; color: var(--text); margin-bottom: 4px; margin-top: 8px;">
+                        Calorías:
+                    </label>
+                    <input type="number" id="foodCalories" placeholder="Ej: 240 (para 1 aguacate de 150gr)" min="0" step="0.1">
+
+                    <label style="font-size: 13px; font-weight: 600; color: var(--text); margin-bottom: 4px; margin-top: 8px;">
+                        Proteínas (g):
+                    </label>
+                    <input type="number" id="foodProtein" placeholder="Ej: 3" min="0" step="0.1">
+
+                    <label style="font-size: 13px; font-weight: 600; color: var(--text); margin-bottom: 4px; margin-top: 8px;">
+                        Carbohidratos (g):
+                    </label>
+                    <input type="number" id="foodCarbs" placeholder="Ej: 12.8" min="0" step="0.1">
+
+                    <label style="font-size: 13px; font-weight: 600; color: var(--text); margin-bottom: 4px; margin-top: 8px;">
+                        Grasas (g):
+                    </label>
+                    <input type="number" id="foodFat" placeholder="Ej: 22" min="0" step="0.1">
+                </div>
+
+                <label style="font-size: 13px; font-weight: 600; color: var(--text); margin-bottom: 4px; margin-top: 8px;">
+                    Aliases (separados por coma):
+                </label>
+                <input type="text" id="foodAliases" placeholder="Ej: palta, aguacates">
+                <p style="font-size: 11px; color: var(--text-light); margin-top: 2px;">
+                    Otros nombres con los que se puede buscar este alimento
+                </p>
+
+                <div style="display: flex; gap: 8px; margin-top: 16px;">
+                    <button class="btn btn-secondary ripple" onclick="closeFoodModal()" style="flex: 1;">
+                        Cancelar
+                    </button>
+                    <button class="btn btn-primary ripple" onclick="saveFoodItem()" style="flex: 2;">
+                        💾 Guardar
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Import diet data -->
     <script src="./diet-data.js"></script>
+    <script src="./food-database.js"></script>
 
     <script>
         // DATA - Now using imported dietData
@@ -1204,11 +1613,17 @@
         let favorites = JSON.parse(localStorage.getItem('favorites')) || [];
         let waterGlasses = parseInt(localStorage.getItem('waterGlasses')) || 0;
         let shoppingChecked = JSON.parse(localStorage.getItem('shoppingChecked')) || {};
-        let darkMode = localStorage.getItem('darkMode') === 'true';
         let waterReminderInterval = null;
         let notificationsEnabled = localStorage.getItem('notificationsEnabled') === 'true';
         let notificationIntervals = [];
         let notificationsShownToday = JSON.parse(localStorage.getItem('notificationsShownToday')) || {};
+
+        // DIARIO STATE
+        let currentDiarioDate = new Date();
+        let diarioData = JSON.parse(localStorage.getItem('diarioData')) || {};
+        let foodHistory = JSON.parse(localStorage.getItem('foodHistory')) || [];
+        let foodFieldCounter = 0;
+        let pendingFoodEntries = []; // For modal workflow
 
         // ==========================================
         // HAPTIC FEEDBACK
@@ -1479,13 +1894,895 @@
             localStorage.setItem('iosBannerDismissed', 'true');
         }
 
-        // INIT FUNCTIONS
-        function init() {
-            // Apply dark mode if saved
-            if (darkMode) {
-                document.documentElement.setAttribute('data-theme', 'dark');
+        // ==========================================
+        // CALORIES & FOOD PARSING FUNCTIONS
+        // ==========================================
+
+        // Parse amount input to extract quantity and unit
+        function parseAmount(amountInput) {
+            amountInput = amountInput.trim().toLowerCase();
+
+            // Patterns:
+            // "2" -> 2 unidades
+            // "100g" -> 100 gramos
+            // "100gr" -> 100 gramos
+            // "1 scoop" -> 1 scoop
+
+            // Check for grams (g, gr, gramos)
+            if (amountInput.match(/^(\d+(?:[.,]\d+)?)\s*g(?:r|ramos?)?$/)) {
+                const match = amountInput.match(/^(\d+(?:[.,]\d+)?)\s*g(?:r|ramos?)?$/);
+                return {
+                    quantity: parseFloat(match[1].replace(',', '.')),
+                    unit: 'gr'
+                };
             }
 
+            // Check for ml
+            if (amountInput.match(/^(\d+(?:[.,]\d+)?)\s*ml$/)) {
+                const match = amountInput.match(/^(\d+(?:[.,]\d+)?)\s*ml$/);
+                return {
+                    quantity: parseFloat(match[1].replace(',', '.')),
+                    unit: 'ml'
+                };
+            }
+
+            // Check for scoop
+            if (amountInput.match(/^(\d+(?:[.,]\d+)?)\s*scoops?$/)) {
+                const match = amountInput.match(/^(\d+(?:[.,]\d+)?)\s*scoops?$/);
+                return {
+                    quantity: parseFloat(match[1].replace(',', '.')),
+                    unit: 'scoop'
+                };
+            }
+
+            // Just a number - assume units
+            if (amountInput.match(/^(\d+(?:[.,]\d+)?)$/)) {
+                return {
+                    quantity: parseFloat(amountInput.replace(',', '.')),
+                    unit: 'unidad'
+                };
+            }
+
+            // Fallback: 1 unit
+            return {
+                quantity: 1,
+                unit: 'unidad'
+            };
+        }
+
+        // Search food in database (including custom foods)
+        function searchFoodInDatabase(foodName) {
+            const normalizedName = foodName.toLowerCase().trim();
+            const allFoods = getAllFoods();
+
+            // Search for exact match or aliases
+            for (let key in allFoods) {
+                const food = allFoods[key];
+                // Check exact match or aliases
+                if (key === normalizedName ||
+                    food.name.toLowerCase() === normalizedName ||
+                    (food.aliases && food.aliases.some(alias => alias.toLowerCase() === normalizedName))) {
+                    return { ...food, source: 'database', key: key };
+                }
+            }
+
+            // Partial match in database
+            for (let key in allFoods) {
+                const food = allFoods[key];
+                if (normalizedName.includes(key) || key.includes(normalizedName) ||
+                    (food.aliases && food.aliases.some(alias =>
+                        normalizedName.includes(alias.toLowerCase()) ||
+                        alias.toLowerCase().includes(normalizedName)))) {
+                    return { ...food, source: 'database', key: key };
+                }
+            }
+
+            return null;
+        }
+
+        // Calculate calories for a food entry
+        function calculateCalories(foodName, amountInput) {
+            const foodInfo = searchFoodInDatabase(foodName);
+
+            if (!foodInfo) {
+                return null; // Food not found
+            }
+
+            const parsed = parseAmount(amountInput);
+            let calories = 0;
+            let protein = 0;
+            let carbs = 0;
+            let fat = 0;
+            let totalWeight = 0;  // Peso total en gr o ml
+
+            // NUEVA LÓGICA: Todos los alimentos ahora soportan gr/ml Y unidades
+            // Si el usuario pone unidades, multiplicamos por defaultWeight
+            // Si el usuario pone gr/ml, usamos directamente ese valor
+
+            if (parsed.unit === 'unidad') {
+                // Usuario ingresó unidades (ej: "2" huevos, "1" arepa)
+                // Convertir a gramos usando defaultWeight
+                if (foodInfo.defaultWeight) {
+                    totalWeight = parsed.quantity * foodInfo.defaultWeight;
+                } else {
+                    // Si no hay defaultWeight, asumir 100gr por unidad
+                    totalWeight = parsed.quantity * 100;
+                }
+            } else if (parsed.unit === 'gr' || parsed.unit === 'ml') {
+                // Usuario ingresó gramos o mililitros directamente
+                totalWeight = parsed.quantity;
+            } else if (parsed.unit === 'scoop') {
+                // Scoop es un alias de unidad para proteína
+                if (foodInfo.defaultWeight) {
+                    totalWeight = parsed.quantity * foodInfo.defaultWeight;
+                } else {
+                    totalWeight = parsed.quantity * 30; // Default 30gr por scoop
+                }
+            }
+
+            // Calcular calorías y macros basados en totalWeight
+            if (foodInfo.unit === '100gr' || foodInfo.unit === '100ml') {
+                // Alimento definido por 100gr/ml
+                calories = (foodInfo.calories / 100) * totalWeight;
+                protein = ((foodInfo.protein || 0) / 100) * totalWeight;
+                carbs = ((foodInfo.carbs || 0) / 100) * totalWeight;
+                fat = ((foodInfo.fat || 0) / 100) * totalWeight;
+            } else {
+                // Fallback por si quedó algo sin unit definido
+                calories = foodInfo.calories * parsed.quantity;
+                protein = (foodInfo.protein || 0) * parsed.quantity;
+                carbs = (foodInfo.carbs || 0) * parsed.quantity;
+                fat = (foodInfo.fat || 0) * parsed.quantity;
+            }
+
+            return {
+                calories: Math.round(calories),
+                protein: Math.round(protein * 10) / 10,
+                carbs: Math.round(carbs * 10) / 10,
+                fat: Math.round(fat * 10) / 10,
+                weight: Math.round(totalWeight),
+                weightUnit: foodInfo.unit.includes('ml') ? 'ml' : 'gr',
+                foodInfo: foodInfo
+            };
+        }
+
+        // ==========================================
+        // CALORIES MODAL FUNCTIONS
+        // ==========================================
+
+        function closeCaloriesModal() {
+            document.getElementById('caloriesModal').classList.remove('show');
+            document.getElementById('manualCalories').value = '';
+            document.getElementById('manualProtein').value = '';
+            document.getElementById('manualCarbs').value = '';
+            document.getElementById('manualFat').value = '';
+        }
+
+        function skipCalories() {
+            // Save current pending entry without calories
+            if (pendingFoodEntries.length > 0) {
+                const entry = pendingFoodEntries.shift();
+                saveFoodEntryWithCalories(entry, null);
+
+                // Process next entry or close modal
+                if (pendingFoodEntries.length > 0) {
+                    showCaloriesModal(pendingFoodEntries[0]);
+                } else {
+                    closeCaloriesModal();
+                }
+            }
+        }
+
+        function saveManualCalories() {
+            const calories = parseFloat(document.getElementById('manualCalories').value);
+            const protein = parseFloat(document.getElementById('manualProtein').value) || 0;
+            const carbs = parseFloat(document.getElementById('manualCarbs').value) || 0;
+            const fat = parseFloat(document.getElementById('manualFat').value) || 0;
+
+            if (!calories || calories <= 0) {
+                alert('Por favor ingresa las calorías');
+                return;
+            }
+
+            if (pendingFoodEntries.length > 0) {
+                const entry = pendingFoodEntries.shift();
+                const parsed = parseAmount(entry.foodAmount);
+
+                // Calculate weight
+                let weight = 0;
+                let weightUnit = 'gr';
+                if (parsed.unit === 'gr' || parsed.unit === 'ml') {
+                    weight = parsed.quantity;
+                    weightUnit = parsed.unit === 'ml' ? 'ml' : 'gr';
+                } else {
+                    // Assume 100gr por unidad si no especifica
+                    weight = parsed.quantity * 100;
+                    weightUnit = 'gr';
+                }
+
+                const nutritionInfo = {
+                    calories: Math.round(calories),
+                    protein: Math.round(protein * 10) / 10,
+                    carbs: Math.round(carbs * 10) / 10,
+                    fat: Math.round(fat * 10) / 10,
+                    weight: Math.round(weight),
+                    weightUnit: weightUnit
+                };
+
+                // Save to custom database for future use
+                const key = entry.foodName.toLowerCase().replace(/\s+/g, '_');
+
+                // Determine unit and defaultWeight for custom database
+                let dbUnit = '100gr';
+                let defaultWeight = 100;
+
+                if (parsed.unit === 'gr' || parsed.unit === 'ml') {
+                    dbUnit = parsed.unit === 'ml' ? '100ml' : '100gr';
+                } else {
+                    // Es unidad, calcular defaultWeight
+                    defaultWeight = weight / parsed.quantity;
+                }
+
+                customFoods[key] = {
+                    name: entry.foodName,
+                    unit: dbUnit,
+                    calories: parsed.unit === 'gr' || parsed.unit === 'ml' ?
+                        Math.round((calories / parsed.quantity) * 100) : // Convert to per 100gr
+                        Math.round((calories / weight) * 100), // Per 100gr
+                    protein: parsed.unit === 'gr' || parsed.unit === 'ml' ?
+                        Math.round(((protein / parsed.quantity) * 100) * 10) / 10 :
+                        Math.round(((protein / weight) * 100) * 10) / 10,
+                    carbs: parsed.unit === 'gr' || parsed.unit === 'ml' ?
+                        Math.round(((carbs / parsed.quantity) * 100) * 10) / 10 :
+                        Math.round(((carbs / weight) * 100) * 10) / 10,
+                    fat: parsed.unit === 'gr' || parsed.unit === 'ml' ?
+                        Math.round(((fat / parsed.quantity) * 100) * 10) / 10 :
+                        Math.round(((fat / weight) * 100) * 10) / 10,
+                    defaultWeight: defaultWeight,
+                    aliases: []
+                };
+                localStorage.setItem('customFoods', JSON.stringify(customFoods));
+
+                saveFoodEntryWithCalories(entry, nutritionInfo);
+
+                // Process next entry or close modal
+                if (pendingFoodEntries.length > 0) {
+                    showCaloriesModal(pendingFoodEntries[0]);
+                } else {
+                    closeCaloriesModal();
+                }
+            }
+        }
+
+        function showCaloriesModal(entry) {
+            document.getElementById('unknownFoodName').textContent = entry.food;
+            document.getElementById('caloriesModal').classList.add('show');
+        }
+
+        // ==========================================
+        // DIARIO FUNCTIONS
+        // ==========================================
+
+        // Format date for display
+        function formatDiarioDate(date) {
+            const today = new Date();
+            const yesterday = new Date(today);
+            yesterday.setDate(yesterday.getDate() - 1);
+
+            // Reset hours for comparison
+            const dateOnly = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+            const todayOnly = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+            const yesterdayOnly = new Date(yesterday.getFullYear(), yesterday.getMonth(), yesterday.getDate());
+
+            if (dateOnly.getTime() === todayOnly.getTime()) {
+                return 'HOY';
+            } else if (dateOnly.getTime() === yesterdayOnly.getTime()) {
+                return 'AYER';
+            } else {
+                const days = ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb'];
+                const months = ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'];
+                return `${days[date.getDay()]} ${date.getDate()} ${months[date.getMonth()]}`;
+            }
+        }
+
+        // Get date key for storage
+        function getDateKey(date) {
+            const year = date.getFullYear();
+            const month = String(date.getMonth() + 1).padStart(2, '0');
+            const day = String(date.getDate()).padStart(2, '0');
+            return `${year}-${month}-${day}`;
+        }
+
+        // Change diario day
+        function changeDiarioDay(direction) {
+            vibrate(30);
+
+            const newDate = new Date(currentDiarioDate);
+            newDate.setDate(newDate.getDate() + direction);
+
+            // Don't allow future dates
+            const today = new Date();
+            if (newDate > today) {
+                return;
+            }
+
+            // Don't allow more than 30 days back
+            const maxPastDate = new Date(today);
+            maxPastDate.setDate(maxPastDate.getDate() - 30);
+            if (newDate < maxPastDate) {
+                return;
+            }
+
+            currentDiarioDate = newDate;
+            updateDiarioDateDisplay();
+            renderDiario();
+        }
+
+        // Update date display and button states
+        function updateDiarioDateDisplay() {
+            const dateText = document.getElementById('diarioDateText');
+            const prevBtn = document.getElementById('prevDayBtn');
+            const nextBtn = document.getElementById('nextDayBtn');
+
+            dateText.textContent = formatDiarioDate(currentDiarioDate);
+
+            // Next button always disabled (can't go to future)
+            nextBtn.disabled = true;
+
+            // Disable prev button if 30 days back
+            const today = new Date();
+            const maxPastDate = new Date(today);
+            maxPastDate.setDate(maxPastDate.getDate() - 30);
+            const tomorrow = new Date(currentDiarioDate);
+            tomorrow.setDate(tomorrow.getDate() - 1);
+            prevBtn.disabled = tomorrow < maxPastDate;
+        }
+
+        // Add a new food field
+        function addFoodField() {
+            vibrate(30);
+
+            const container = document.getElementById('foodFieldsContainer');
+            const fieldId = `foodField_${foodFieldCounter++}`;
+
+            const fieldDiv = document.createElement('div');
+            fieldDiv.className = 'food-field-item fade-in';
+            fieldDiv.id = fieldId;
+
+            fieldDiv.innerHTML = `
+                <input type="text"
+                       placeholder="Nombre del alimento (ej: huevos, lomo de res, arepa)"
+                       class="food-name-input"
+                       data-field-id="${fieldId}">
+                <input type="text"
+                       placeholder="Cantidad (ej: 2, 100g)"
+                       class="food-amount-input"
+                       data-field-id="${fieldId}">
+                <button class="food-field-remove ripple" onclick="removeFoodField('${fieldId}')" title="Eliminar">×</button>
+            `;
+
+            container.appendChild(fieldDiv);
+
+            // Focus on new input
+            const input = fieldDiv.querySelector('.food-name-input');
+            input.focus();
+
+            // Add ripple effect to button
+            setTimeout(() => {
+                fieldDiv.querySelector('.ripple').addEventListener('click', createRipple);
+            }, 100);
+        }
+
+        // Remove a food field
+        function removeFoodField(fieldId) {
+            vibrate(50);
+
+            const container = document.getElementById('foodFieldsContainer');
+            const fields = container.querySelectorAll('.food-field-item');
+
+            // Don't allow removing the last field
+            if (fields.length <= 1) {
+                return;
+            }
+
+            const field = document.getElementById(fieldId);
+            if (field) {
+                field.style.opacity = '0';
+                field.style.transform = 'translateX(-20px)';
+                setTimeout(() => {
+                    field.remove();
+                }, 200);
+            }
+        }
+
+        // Initialize food fields
+        function initFoodFields() {
+            const container = document.getElementById('foodFieldsContainer');
+            container.innerHTML = '';
+            foodFieldCounter = 0;
+            addFoodField(); // Add first field by default
+        }
+
+        // Save a single food entry with calculated nutrition
+        function saveFoodEntryWithCalories(entry, nutritionInfo) {
+            const dateKey = getDateKey(currentDiarioDate);
+            if (!diarioData[dateKey]) {
+                diarioData[dateKey] = [];
+            }
+
+            // Add nutrition info to entry
+            if (nutritionInfo) {
+                entry.calories = nutritionInfo.calories;
+                entry.protein = nutritionInfo.protein;
+                entry.carbs = nutritionInfo.carbs;
+                entry.fat = nutritionInfo.fat;
+                entry.weight = nutritionInfo.weight;
+                entry.weightUnit = nutritionInfo.weightUnit;
+            }
+
+            diarioData[dateKey].push(entry);
+
+            // Update food history
+            if (!foodHistory.includes(entry.food)) {
+                foodHistory.push(entry.food);
+                localStorage.setItem('foodHistory', JSON.stringify(foodHistory));
+            }
+
+            // Save to localStorage
+            localStorage.setItem('diarioData', JSON.stringify(diarioData));
+        }
+
+        // Submit all food entries
+        function submitFoodEntry() {
+            vibrate([50, 50, 50]);
+
+            const tag = document.getElementById('mealTag').value;
+            const container = document.getElementById('foodFieldsContainer');
+            const fields = container.querySelectorAll('.food-field-item');
+
+            // Collect all food entries with both name and amount
+            const foods = [];
+            fields.forEach(field => {
+                const nameInput = field.querySelector('.food-name-input');
+                const amountInput = field.querySelector('.food-amount-input');
+
+                const name = nameInput ? nameInput.value.trim() : '';
+                const amount = amountInput ? amountInput.value.trim() : '';
+
+                if (name && amount) {
+                    foods.push({ name, amount });
+                } else if (name && !amount) {
+                    alert(`Falta la cantidad para "${name}"`);
+                    return;
+                }
+            });
+
+            if (foods.length === 0) {
+                alert('Por favor escribe al menos un alimento con su cantidad');
+                return;
+            }
+
+            // Process each food
+            const now = new Date();
+            const entriesWithoutCalories = [];
+            let savedCount = 0;
+
+            foods.forEach(food => {
+                const nutritionCalc = calculateCalories(food.name, food.amount);
+
+                const entry = {
+                    id: Date.now().toString() + Math.random().toString(36).substr(2, 9),
+                    tag: tag,
+                    food: `${food.amount} ${food.name}`,
+                    foodName: food.name,
+                    foodAmount: food.amount,
+                    time: `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`
+                };
+
+                if (nutritionCalc) {
+                    // Found in database, save immediately
+                    saveFoodEntryWithCalories(entry, nutritionCalc);
+                    savedCount++;
+                } else {
+                    // Not found, add to pending list
+                    entriesWithoutCalories.push(entry);
+                }
+            });
+
+            // Reset form
+            initFoodFields();
+
+            // Re-render
+            renderDiario();
+
+            if (entriesWithoutCalories.length > 0) {
+                // Show modal for foods without calories
+                pendingFoodEntries = entriesWithoutCalories;
+                showCaloriesModal(pendingFoodEntries[0]);
+            } else {
+                // All foods had calories
+                const plural = savedCount > 1 ? 's' : '';
+                alert(`✅ ${savedCount} alimento${plural} agregado${plural} con calorías calculadas`);
+            }
+        }
+
+        // Delete food entry
+        function deleteFoodEntry(entryId) {
+            vibrate(50);
+
+            if (!confirm('¿Eliminar esta entrada?')) {
+                return;
+            }
+
+            const dateKey = getDateKey(currentDiarioDate);
+            if (diarioData[dateKey]) {
+                diarioData[dateKey] = diarioData[dateKey].filter(e => e.id !== entryId);
+
+                // Remove date key if no entries
+                if (diarioData[dateKey].length === 0) {
+                    delete diarioData[dateKey];
+                }
+
+                localStorage.setItem('diarioData', JSON.stringify(diarioData));
+                renderDiario();
+            }
+        }
+
+        // Render diario entries
+        function renderDiario() {
+            const container = document.getElementById('diario-entries');
+            const dateKey = getDateKey(currentDiarioDate);
+            const entries = diarioData[dateKey] || [];
+
+            if (entries.length === 0) {
+                container.innerHTML = '<div class="meal-group-empty">No hay entradas para este día.<br>¡Agrega tu primera comida arriba! 👆</div>';
+                return;
+            }
+
+            // Calculate totals
+            let totalCalories = 0;
+            let totalProtein = 0;
+            let totalCarbs = 0;
+            let totalFat = 0;
+            let entriesWithCalories = 0;
+
+            entries.forEach(entry => {
+                if (entry.calories) {
+                    totalCalories += entry.calories;
+                    totalProtein += entry.protein || 0;
+                    totalCarbs += entry.carbs || 0;
+                    totalFat += entry.fat || 0;
+                    entriesWithCalories++;
+                }
+            });
+
+            // Group by tag
+            const tagOrder = ['Desayuno', 'Media mañana', 'Almuerzo', 'Merienda', 'Cena', 'Snack'];
+            const tagIcons = {
+                'Desayuno': '🌅',
+                'Media mañana': '🍎',
+                'Almuerzo': '🍽️',
+                'Merienda': '🥜',
+                'Cena': '🌙',
+                'Snack': '🍿'
+            };
+
+            const grouped = {};
+            entries.forEach(entry => {
+                if (!grouped[entry.tag]) {
+                    grouped[entry.tag] = [];
+                }
+                grouped[entry.tag].push(entry);
+            });
+
+            // Render totals card if we have calories
+            let html = '';
+            if (entriesWithCalories > 0) {
+                html += `<div class="card" style="background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%); color: white; margin-bottom: 20px;">
+                    <div style="font-size: 16px; font-weight: 700; margin-bottom: 12px;">📊 Resumen Nutricional</div>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                        <div style="text-align: center; background: rgba(255,255,255,0.15); padding: 12px; border-radius: 12px;">
+                            <div style="font-size: 24px; font-weight: 700;">${totalCalories}</div>
+                            <div style="font-size: 12px; opacity: 0.9;">Calorías</div>
+                        </div>
+                        <div style="text-align: center; background: rgba(255,255,255,0.15); padding: 12px; border-radius: 12px;">
+                            <div style="font-size: 24px; font-weight: 700;">${Math.round(totalProtein)}</div>
+                            <div style="font-size: 12px; opacity: 0.9;">Proteína (g)</div>
+                        </div>
+                        <div style="text-align: center; background: rgba(255,255,255,0.15); padding: 12px; border-radius: 12px;">
+                            <div style="font-size: 24px; font-weight: 700;">${Math.round(totalCarbs)}</div>
+                            <div style="font-size: 12px; opacity: 0.9;">Carbos (g)</div>
+                        </div>
+                        <div style="text-align: center; background: rgba(255,255,255,0.15); padding: 12px; border-radius: 12px;">
+                            <div style="font-size: 24px; font-weight: 700;">${Math.round(totalFat)}</div>
+                            <div style="font-size: 12px; opacity: 0.9;">Grasas (g)</div>
+                        </div>
+                    </div>
+                    <div style="margin-top: 12px; font-size: 11px; opacity: 0.8; text-align: center;">
+                        ${entriesWithCalories} de ${entries.length} alimentos con datos nutricionales
+                    </div>
+                </div>`;
+            }
+
+            // Render groups in order
+            tagOrder.forEach(tag => {
+                if (grouped[tag] && grouped[tag].length > 0) {
+                    html += `<div class="meal-group">
+                        <div class="meal-group-title">${tagIcons[tag]} ${tag.toUpperCase()}</div>`;
+
+                    grouped[tag].forEach(entry => {
+                        let nutritionInfo = '';
+                        if (entry.calories) {
+                            nutritionInfo = `<div style="font-size: 12px; color: var(--primary); font-weight: 600; margin-top: 2px;">
+                                ${entry.calories} kcal`;
+                            if (entry.weight) {
+                                nutritionInfo += ` | ${entry.weight}${entry.weightUnit || 'gr'}`;
+                            }
+                            if (entry.protein) {
+                                nutritionInfo += ` | P: ${entry.protein}g`;
+                            }
+                            if (entry.carbs) {
+                                nutritionInfo += ` | C: ${entry.carbs}g`;
+                            }
+                            if (entry.fat) {
+                                nutritionInfo += ` | G: ${entry.fat}g`;
+                            }
+                            nutritionInfo += `</div>`;
+                        }
+
+                        html += `<div class="food-entry fade-in">
+                            <div class="food-entry-content">
+                                <div class="food-entry-main">${entry.food}</div>
+                                ${nutritionInfo}
+                                <div class="food-entry-time">${entry.time}</div>
+                            </div>
+                            <button class="food-entry-delete ripple" onclick="deleteFoodEntry('${entry.id}')">🗑️</button>
+                        </div>`;
+                    });
+
+                    html += '</div>';
+                }
+            });
+
+            container.innerHTML = html;
+
+            // Re-add ripple effects
+            setTimeout(() => {
+                document.querySelectorAll('.ripple').forEach(el => {
+                    el.addEventListener('click', createRipple);
+                });
+            }, 100);
+        }
+
+        // Removed autocomplete - no longer needed with simplified form
+
+        // Export diario to CSV
+        function exportDiarioCSV() {
+            vibrate(50);
+
+            if (Object.keys(diarioData).length === 0) {
+                alert('No hay datos en el diario para exportar');
+                return;
+            }
+
+            // Create CSV content
+            let csv = 'Fecha,Hora,Tipo de Comida,Alimento,Peso,Calorías,Proteínas (g),Carbohidratos (g),Grasas (g)\n';
+
+            // Sort dates
+            const dates = Object.keys(diarioData).sort();
+
+            dates.forEach(date => {
+                diarioData[date].forEach(entry => {
+                    const weight = entry.weight ? `${entry.weight}${entry.weightUnit || 'gr'}` : '';
+                    csv += `${date},${entry.time},${entry.tag},"${entry.food}",${weight},${entry.calories || ''},${entry.protein || ''},${entry.carbs || ''},${entry.fat || ''}\n`;
+                });
+            });
+
+            // Download
+            const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `diario-alimentacion-${new Date().toISOString().split('T')[0]}.csv`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+
+            alert('¡Diario exportado correctamente!');
+        }
+
+        // ===========================================
+        // FOOD DATABASE MANAGEMENT
+        // ===========================================
+
+        // Load custom foods from localStorage
+        let customFoods = JSON.parse(localStorage.getItem('customFoods') || '{}');
+
+        // Merge default foodDatabase with custom foods
+        function getAllFoods() {
+            return { ...foodDatabase, ...customFoods };
+        }
+
+        // Render food database list
+        function renderFoodDatabase(filter = '') {
+            const allFoods = getAllFoods();
+            const container = document.getElementById('food-database-list');
+
+            const foodEntries = Object.entries(allFoods)
+                .filter(([key, food]) => {
+                    if (!filter) return true;
+                    const searchTerm = filter.toLowerCase();
+                    return food.name.toLowerCase().includes(searchTerm) ||
+                           key.toLowerCase().includes(searchTerm) ||
+                           (food.aliases && food.aliases.some(alias => alias.toLowerCase().includes(searchTerm)));
+                })
+                .sort((a, b) => a[1].name.localeCompare(b[1].name));
+
+            if (foodEntries.length === 0) {
+                container.innerHTML = `
+                    <div style="text-align: center; padding: 40px; color: var(--text-light);">
+                        <p style="font-size: 48px; margin-bottom: 16px;">🔍</p>
+                        <p>No se encontraron alimentos</p>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = foodEntries.map(([key, food]) => {
+                const isCustom = customFoods.hasOwnProperty(key);
+                return `
+                    <div class="card mb-15" style="position: relative;">
+                        ${isCustom ? '<div style="position: absolute; top: 12px; right: 12px; background: var(--primary); color: white; padding: 4px 8px; border-radius: 4px; font-size: 10px; font-weight: 600;">CUSTOM</div>' : ''}
+                        <div style="margin-bottom: 12px;">
+                            <h3 style="font-size: 16px; font-weight: 600; color: var(--text); margin-bottom: 4px;">
+                                ${food.name}
+                            </h3>
+                            <p style="font-size: 12px; color: var(--text-light);">
+                                <strong>Porción:</strong> ${food.unit} (${food.defaultWeight}${food.unit.includes('ml') ? 'ml' : 'g'})
+                            </p>
+                        </div>
+                        <div style="background: var(--bg); padding: 8px; border-radius: 8px; margin-bottom: 8px; text-align: center;">
+                            <div style="font-size: 11px; color: var(--text-light); margin-bottom: 2px;">Calorías por porción</div>
+                            <div style="font-size: 20px; font-weight: 700; color: var(--primary);">${food.calories}</div>
+                        </div>
+                        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 12px; padding: 12px; background: var(--bg); border-radius: 8px;">
+                            <div style="text-align: center;">
+                                <div style="font-size: 11px; color: var(--text-light);">Proteínas</div>
+                                <div style="font-size: 14px; font-weight: 600; color: var(--primary);">${food.protein}g</div>
+                            </div>
+                            <div style="text-align: center;">
+                                <div style="font-size: 11px; color: var(--text-light);">Carbos</div>
+                                <div style="font-size: 14px; font-weight: 600; color: var(--warning);">${food.carbs}g</div>
+                            </div>
+                            <div style="text-align: center;">
+                                <div style="font-size: 11px; color: var(--text-light);">Grasas</div>
+                                <div style="font-size: 14px; font-weight: 600; color: var(--secondary);">${food.fat}g</div>
+                            </div>
+                        </div>
+                        ${food.aliases && food.aliases.length > 0 ? `
+                            <div style="font-size: 11px; color: var(--text-light); margin-bottom: 12px;">
+                                <strong>También conocido como:</strong> ${food.aliases.join(', ')}
+                            </div>
+                        ` : ''}
+                        <div style="display: flex; gap: 8px;">
+                            <button class="btn btn-secondary ripple" onclick="editFoodItem('${key}')" style="flex: 1;">
+                                ✏️ Editar
+                            </button>
+                            ${isCustom ? `
+                                <button class="btn ripple" onclick="deleteFoodItem('${key}')"
+                                        style="flex: 1; background: var(--danger); color: white;">
+                                    🗑️ Eliminar
+                                </button>
+                            ` : ''}
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // Filter food database
+        function filterFoodDatabase() {
+            const searchTerm = document.getElementById('searchFoodDB').value;
+            renderFoodDatabase(searchTerm);
+        }
+
+        // Show add food modal
+        function showAddFoodModal() {
+            document.getElementById('foodModalTitle').textContent = '➕ Agregar Alimento';
+            document.getElementById('editFoodKey').value = '';
+            document.getElementById('foodName').value = '';
+            document.getElementById('foodUnit').value = '';
+            document.getElementById('foodCalories').value = '';
+            document.getElementById('foodProtein').value = '';
+            document.getElementById('foodCarbs').value = '';
+            document.getElementById('foodFat').value = '';
+            document.getElementById('foodDefaultWeight').value = '';
+            document.getElementById('foodAliases').value = '';
+            document.getElementById('foodModal').classList.add('show');
+        }
+
+        // Edit food item
+        function editFoodItem(key) {
+            const allFoods = getAllFoods();
+            const food = allFoods[key];
+
+            document.getElementById('foodModalTitle').textContent = '✏️ Editar Alimento';
+            document.getElementById('editFoodKey').value = key;
+            document.getElementById('foodName').value = food.name;
+            document.getElementById('foodUnit').value = food.unit;
+            document.getElementById('foodCalories').value = food.calories;
+            document.getElementById('foodProtein').value = food.protein;
+            document.getElementById('foodCarbs').value = food.carbs;
+            document.getElementById('foodFat').value = food.fat;
+            document.getElementById('foodDefaultWeight').value = food.defaultWeight;
+            document.getElementById('foodAliases').value = food.aliases ? food.aliases.join(', ') : '';
+            document.getElementById('foodModal').classList.add('show');
+        }
+
+        // Save food item (add or edit)
+        function saveFoodItem() {
+            const name = document.getElementById('foodName').value.trim();
+            const unit = document.getElementById('foodUnit').value.trim();
+            const calories = parseFloat(document.getElementById('foodCalories').value);
+            const protein = parseFloat(document.getElementById('foodProtein').value);
+            const carbs = parseFloat(document.getElementById('foodCarbs').value);
+            const fat = parseFloat(document.getElementById('foodFat').value);
+            const defaultWeight = parseFloat(document.getElementById('foodDefaultWeight').value);
+            const aliasesStr = document.getElementById('foodAliases').value.trim();
+            const editKey = document.getElementById('editFoodKey').value;
+
+            // Validation
+            if (!name || !unit || isNaN(calories) || isNaN(protein) || isNaN(carbs) || isNaN(fat) || isNaN(defaultWeight)) {
+                alert('Por favor completa todos los campos obligatorios con valores válidos');
+                return;
+            }
+
+            // Create food object
+            const foodItem = {
+                name: name,
+                unit: unit,
+                calories: calories,
+                protein: protein,
+                carbs: carbs,
+                fat: fat,
+                defaultWeight: defaultWeight,
+                aliases: aliasesStr ? aliasesStr.split(',').map(a => a.trim()).filter(a => a) : []
+            };
+
+            // Generate key if new item
+            const key = editKey || name.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-z0-9\s]/g, '').replace(/\s+/g, ' ').trim();
+
+            // Save to custom foods
+            customFoods[key] = foodItem;
+            localStorage.setItem('customFoods', JSON.stringify(customFoods));
+
+            // Close modal and refresh list
+            closeFoodModal();
+            renderFoodDatabase(document.getElementById('searchFoodDB').value);
+
+            alert(editKey ? '✅ Alimento actualizado correctamente' : '✅ Alimento agregado correctamente');
+        }
+
+        // Delete custom food item
+        function deleteFoodItem(key) {
+            if (!confirm(`¿Estás seguro de eliminar "${customFoods[key].name}"?`)) {
+                return;
+            }
+
+            delete customFoods[key];
+            localStorage.setItem('customFoods', JSON.stringify(customFoods));
+            renderFoodDatabase(document.getElementById('searchFoodDB').value);
+            alert('🗑️ Alimento eliminado correctamente');
+        }
+
+        // Close food modal
+        function closeFoodModal() {
+            document.getElementById('foodModal').classList.remove('show');
+        }
+
+        // INIT FUNCTIONS
+        function init() {
             renderMenu();
             renderRecipes();
             renderShopping();
@@ -1493,6 +2790,14 @@
             updateFavoritesPreview();
             setupScrollBehavior();
             checkDailyReset();
+
+            // Initialize Diario
+            updateDiarioDateDisplay();
+            renderDiario();
+            initFoodFields();
+
+            // Initialize Food Database
+            renderFoodDatabase();
 
             // Setup animations
             setTimeout(setupIntersectionObserver, 100);
@@ -1513,17 +2818,6 @@
                     localStorage.setItem('notificationsEnabled', 'false');
                     console.log('⚠️ Permiso de notificaciones revocado');
                 }
-            }
-        }
-
-        // DARK MODE
-        function toggleDarkMode() {
-            darkMode = !darkMode;
-            localStorage.setItem('darkMode', darkMode);
-            if (darkMode) {
-                document.documentElement.setAttribute('data-theme', 'dark');
-            } else {
-                document.documentElement.removeAttribute('data-theme');
             }
         }
 
@@ -1919,14 +3213,16 @@
 
         function exportData() {
             const data = {
-                version: 1,
+                version: 3,
                 exportDate: new Date().toISOString(),
                 favorites: favorites,
                 waterGlasses: waterGlasses,
                 shoppingChecked: shoppingChecked,
-                darkMode: darkMode
+                diarioData: diarioData,
+                foodHistory: foodHistory,
+                customFoods: customFoods
             };
-            
+
             const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
@@ -1936,7 +3232,7 @@
             a.click();
             document.body.removeChild(a);
             URL.revokeObjectURL(url);
-            
+
             alert('¡Backup exportado correctamente!');
             closeBackupModal();
         }
@@ -1944,12 +3240,12 @@
         function importData(e) {
             const file = e.target.files[0];
             if (!file) return;
-            
+
             const reader = new FileReader();
             reader.onload = function(event) {
                 try {
                     const data = JSON.parse(event.target.result);
-                    
+
                     if (data.favorites) {
                         favorites = data.favorites;
                         localStorage.setItem('favorites', JSON.stringify(favorites));
@@ -1962,22 +3258,32 @@
                         shoppingChecked = data.shoppingChecked;
                         localStorage.setItem('shoppingChecked', JSON.stringify(shoppingChecked));
                     }
-                    if (typeof data.darkMode === 'boolean') {
-                        darkMode = data.darkMode;
-                        localStorage.setItem('darkMode', darkMode);
-                        if (darkMode) {
-                            document.documentElement.setAttribute('data-theme', 'dark');
-                        } else {
-                            document.documentElement.removeAttribute('data-theme');
-                        }
+                    if (data.diarioData) {
+                        diarioData = data.diarioData;
+                        localStorage.setItem('diarioData', JSON.stringify(diarioData));
                     }
-                    
+                    if (data.foodHistory) {
+                        foodHistory = data.foodHistory;
+                        localStorage.setItem('foodHistory', JSON.stringify(foodHistory));
+                    }
+                    // Support both old and new custom food format
+                    if (data.customFoodDatabase) {
+                        customFoods = data.customFoodDatabase;
+                        localStorage.setItem('customFoods', JSON.stringify(customFoods));
+                    }
+                    if (data.customFoods) {
+                        customFoods = data.customFoods;
+                        localStorage.setItem('customFoods', JSON.stringify(customFoods));
+                    }
+
                     // Re-render everything
                     renderMenu();
                     renderShopping();
                     renderWaterTracker();
                     updateFavoritesPreview();
-                    
+                    renderDiario();
+                    renderFoodDatabase();
+
                     alert('¡Datos importados correctamente!');
                     closeBackupModal();
                 } catch (err) {
@@ -2040,10 +3346,16 @@
             showSection('menu');
         });
 
-        // Close modal on outside click
+        // Close modals on outside click
         document.getElementById('backupModal').addEventListener('click', function(e) {
             if (e.target === this) {
                 closeBackupModal();
+            }
+        });
+
+        document.getElementById('caloriesModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeCaloriesModal();
             }
         });
 
